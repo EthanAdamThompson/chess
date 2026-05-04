@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -54,9 +55,40 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
-        if (piece.getPieceType() == PieceType.BISHOP){
-            return List.of(new ChessMove(new ChessPosition(5,4), new ChessPosition(1,8), null));
+        Collection<ChessMove> moves = new ArrayList<>();
+        ChessPiece pieceMove = board.getPiece(myPosition);
+
+        int row = myPosition.getRow();
+        int col = myPosition.getColumn();
+        if (pieceMove.getPieceType() == PieceType.BISHOP) {
+            int[][] directionsBishop;
+            directionsBishop = new int[][]{{1,1}, {1,-1}, {-1,1}, {-1,-1}};
+            for (int[] d : directionsBishop) {
+                int r = row;
+                int c = col;
+
+                while (true) {
+                    r += d[0];
+                    c += d[1];
+
+                    if (r < 1 || r > 8 || c < 1 || c > 8) break;
+
+                    ChessPosition newPos = new ChessPosition(r, c);
+                    ChessPiece target = board.getPiece(newPos);
+                    // Check to see if the square is empty
+                    if (target == null) {
+                        moves.add(new ChessMove(myPosition, newPos, null));
+                    } else {
+                        // Checks to see if you are capturing an enemy piece
+                        if (target.getTeamColor() != pieceMove.getTeamColor()) {
+                            moves.add(new ChessMove(myPosition, newPos, null));
+                        }
+                        break;
+                    }
+
+                }
+            }
         }
-        return List.of();
+        return moves;
     }
 }
