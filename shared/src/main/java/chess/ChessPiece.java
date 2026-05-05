@@ -85,7 +85,9 @@ public class ChessPiece {
                     r += d[0];// chooses the first in the list of directions
                     c += d[1];// chooses the second
                     // Checks if tile is on the board
-                    if (r < 1 || r > 8 || c < 1 || c > 8) break;
+                    if (r < 1 || r > 8 || c < 1 || c > 8) {
+                        break;
+                    }
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
                     // Check to see if the square is empty
@@ -113,7 +115,9 @@ public class ChessPiece {
                         r += d[0]; // Goes based on the first position of the direction list
                         c += d[1]; // Goes based on second
                         // Checks for an out of bounds
-                        if (r < 1 || r > 8 || c < 1 || c > 8) break;
+                        if (r < 1 || r > 8 || c < 1 || c > 8) {
+                            break;
+                        }
 
                         ChessPosition newPos = new ChessPosition(r, c);
                         ChessPiece target = board.getPiece(newPos);
@@ -142,7 +146,9 @@ public class ChessPiece {
                     r += d[0]; // 0th Index for directionQueen list
                     c += d[1]; // 1st Index
                     // Checks for out of bound
-                    if (r < 1 || r > 8 || c < 1 || c > 8) break;
+                    if (r < 1 || r > 8 || c < 1 || c > 8) {
+                        break;
+                    }
 
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
@@ -170,7 +176,9 @@ public class ChessPiece {
                     r += d[0];
                     c += d[1];
                     // Checks for out of bound
-                    if (r < 1 || r > 8 || c < 1 || c > 8) continue; // continue instead of break
+                    if (r < 1 || r > 8 || c < 1 || c > 8) {
+                        continue; // continue instead of break
+                    }
 
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
@@ -196,7 +204,9 @@ public class ChessPiece {
                     r += d[0];
                     c += d[1];
                     // Checks for out of bound
-                    if (r < 1 || r > 8 || c < 1 || c > 8) continue; // Continue instead of break
+                    if (r < 1 || r > 8 || c < 1 || c > 8) {
+                        continue; // Continue instead of break
+                    }
 
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
