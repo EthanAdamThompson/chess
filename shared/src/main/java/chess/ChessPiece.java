@@ -208,7 +208,43 @@ public class ChessPiece {
                         break;
                     }
                 }
+            }else if (pieceMove.getPieceType() == PieceType.PAWN) {
+
+            int direction = (pieceMove.getTeamColor() == pieceColor.WHITE) ? 1 : -1;
+
+            // 1. forward move
+            int forwardRow = row + direction;
+            int r = row;
+            int c = col;
+
+            if (forwardRow >= 1 && forwardRow <= 8) {
+                ChessPosition forwardPos = new ChessPosition(forwardRow, col);
+
+                if (board.getPiece(forwardPos) == null) {
+                    moves.add(new ChessMove(myPosition, forwardPos, null));
+                }
             }
+
+            // 2. diagonal captures
+            int[][] captures = {
+                    {direction, 1},
+                    {direction, -1}
+            };
+
+            for (int[] d : captures) {
+                r += d[0];
+                c += d[1];
+
+                if (r < 1 || r > 8 || c < 1 || c > 8) continue;
+
+                ChessPosition newPos = new ChessPosition(r, c);
+                ChessPiece target = board.getPiece(newPos);
+
+                if (target != null && target.getTeamColor() != pieceMove.getTeamColor()) {
+                    moves.add(new ChessMove(myPosition, newPos, null));
+                }
+            }
+        }
         return moves;
     }
 }
