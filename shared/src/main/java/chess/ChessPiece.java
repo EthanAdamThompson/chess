@@ -131,7 +131,84 @@ public class ChessPiece {
 
                     }
                 }
-        }
+            }else if(pieceMove.getPieceType() == PieceType.QUEEN) {
+            int[][] directionsQueen;
+            directionsQueen = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
+            for (int[] d : directionsQueen) {
+                int r = row;
+                int c = col;
+
+                while (true) {
+                    r += d[0];
+                    c += d[1];
+
+                    if (r < 1 || r > 8 || c < 1 || c > 8) break;
+
+                    ChessPosition newPos = new ChessPosition(r, c);
+                    ChessPiece target = board.getPiece(newPos);
+                    // Check to see if the square is empty
+                    if (target == null) {
+                        moves.add(new ChessMove(myPosition, newPos, null));
+                    } else {
+                        // Checks to see if you are capturing an enemy piece
+                        if (target.getTeamColor() != pieceMove.getTeamColor()) {
+                            moves.add(new ChessMove(myPosition, newPos, null));
+                        }
+                        break;
+                    }
+                }
+            }
+        }else if(pieceMove.getPieceType() == PieceType.KING) {
+            int[][] directionsKing;
+            directionsKing = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
+            for (int[] d : directionsKing) {
+                int r = row;
+                int c = col;
+
+                    r += d[0];
+                    c += d[1];
+
+                    if (r < 1 || r > 8 || c < 1 || c > 8) continue;
+
+                    ChessPosition newPos = new ChessPosition(r, c);
+                    ChessPiece target = board.getPiece(newPos);
+                    // Check to see if the square is empty
+                    if (target == null) {
+                        moves.add(new ChessMove(myPosition, newPos, null));
+                    } else {
+                        // Checks to see if you are capturing an enemy piece
+                        if (target.getTeamColor() != pieceMove.getTeamColor()) {
+                            moves.add(new ChessMove(myPosition, newPos, null));
+                        }
+                    }
+
+            }
+        }else if(pieceMove.getPieceType() == PieceType.KNIGHT) {
+            int[][] directionsKnight;
+            directionsKnight = new int[][]{{1,2}, {-1,2}, {1,-2}, {-1,-2}, {2,1}, {2,-1}, {-2,1}, {-2,-1}};
+            for (int[] d : directionsKnight) {
+                int r = row;
+                int c = col;
+
+                    r += d[0];
+                    c += d[1];
+
+                    if (r < 1 || r > 8 || c < 1 || c > 8) continue;
+
+                    ChessPosition newPos = new ChessPosition(r, c);
+                    ChessPiece target = board.getPiece(newPos);
+                    // Check to see if the square is empty
+                    if (target == null) {
+                        moves.add(new ChessMove(myPosition, newPos, null));
+                    } else {
+                        // Checks to see if you are capturing an enemy piece
+                        if (target.getTeamColor() != pieceMove.getTeamColor()) {
+                            moves.add(new ChessMove(myPosition, newPos, null));
+                        }
+                        break;
+                    }
+                }
+            }
         return moves;
     }
 }
