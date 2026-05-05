@@ -254,7 +254,9 @@ public class ChessPiece {
                 int r = row + d[0];
                 int c = col + d[1];
 
-                if (r < 1 || r > 8 || c < 1 || c > 8) continue;
+                if (r < 1 || r > 8 || c < 1 || c > 8) {
+                    continue;
+                }
 
                 ChessPosition newPos = new ChessPosition(r, c);
                 ChessPiece target = board.getPiece(newPos);
