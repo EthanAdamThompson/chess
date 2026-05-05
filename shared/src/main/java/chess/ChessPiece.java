@@ -216,9 +216,9 @@ public class ChessPiece {
             }
         else if (pieceMove.getPieceType() == PieceType.PAWN) {
             // UNDER CONSTRUCTION
+            // Declaration of variables
             int direction = (pieceMove.getTeamColor() == pieceColor.WHITE) ? 1 : -1;
-
-            // 1. forward move
+            // forward move
             int forwardRow = row + direction;
             int r = row;
             int c = col;
@@ -232,15 +232,19 @@ public class ChessPiece {
                 ChessPosition forwardPos = new ChessPosition(forwardRow, col);
 
                 if (board.getPiece(forwardPos) == null) {
-                    moveTaken.add(new ChessMove(myPosition, forwardPos, null));
+                    if (isPromotionRow) {
+                        moveTaken.add(new ChessMove(myPosition, forwardPos, PieceType.QUEEN));
+                        moveTaken.add(new ChessMove(myPosition, forwardPos, PieceType.ROOK));
+                        moveTaken.add(new ChessMove(myPosition, forwardPos, PieceType.BISHOP));
+                        moveTaken.add(new ChessMove(myPosition, forwardPos, PieceType.KNIGHT));
+                    } else {
+                        moveTaken.add(new ChessMove(myPosition, forwardPos, null));
+                    }
                 }
             }
 
-            // 2. diagonal captures
-            int[][] captures = {
-                    {direction, 1},
-                    {direction, -1}
-            };
+            // diagonal captures
+            int[][] captures = {{direction, 1}, {direction, -1}};
 
             for (int[] d : captures) {
                 r = row + d[0];
@@ -252,10 +256,17 @@ public class ChessPiece {
                 ChessPiece target = board.getPiece(newPos);
 
                 if (target != null && target.getTeamColor() != pieceMove.getTeamColor()) {
-                    moveTaken.add(new ChessMove(myPosition, newPos, null));
+                    if (isPromotionRow) {
+                        moveTaken.add(new ChessMove(myPosition,newPos, PieceType.QUEEN));
+                        moveTaken.add(new ChessMove(myPosition, newPos, PieceType.ROOK));
+                        moveTaken.add(new ChessMove(myPosition, newPos, PieceType.BISHOP));
+                        moveTaken.add(new ChessMove(myPosition, newPos, PieceType.KNIGHT));
+                    } else {
+                        moveTaken.add(new ChessMove(myPosition, newPos, null));
+                    }
                 }
             }
-            // 3. When you go forward Double
+            // When you go forward Double
             int startRow = isWhite ? 2 : 7;
             int doubleRow = row + (2 * direction); // So negative if Black
 
