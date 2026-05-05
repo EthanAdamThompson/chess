@@ -68,148 +68,154 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        // Declaration of Variables
         ChessPiece piece = board.getPiece(myPosition);
-        Collection<ChessMove> moves = new ArrayList<>();
+        Collection<ChessMove> moveTaken = new ArrayList<>(); // Creates new List called
         ChessPiece pieceMove = board.getPiece(myPosition);
 
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
         if (pieceMove.getPieceType() == PieceType.BISHOP) {
             int[][] directionsBishop;
+            // Defines the 4 directions bishops can take
             directionsBishop = new int[][]{{1,1}, {1,-1}, {-1,1}, {-1,-1}};
-            for (int[] d : directionsBishop) {
+            for (int[] d : directionsBishop) { // Increments through each different possible direction
                 int r = row;
                 int c = col;
-
+                // Goes through and increments both row and column
                 while (true) {
-                    r += d[0];
-                    c += d[1];
-
+                    r += d[0];// chooses the first in the list of directions
+                    c += d[1];// chooses the second
+                    // Checks if tile is on the board
                     if (r < 1 || r > 8 || c < 1 || c > 8) break;
-
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
                     // Check to see if the square is empty
-                    if (target == null) {
-                        moves.add(new ChessMove(myPosition, newPos, null));
+                    if (target == null) { //
+                        moveTaken.add(new ChessMove(myPosition, newPos, null));
                     } else {
                         // Checks to see if you are capturing an enemy piece
                         if (target.getTeamColor() != pieceMove.getTeamColor()) {
-                            moves.add(new ChessMove(myPosition, newPos, null));
+                            moveTaken.add(new ChessMove(myPosition, newPos, null));
                         }
                         break;
                     }
-
                 }
             }
         }
-            else if(pieceMove.getPieceType() == PieceType.ROOK) {
-                int[][] directionsRook;
-                directionsRook = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}};
+        else if(pieceMove.getPieceType() == PieceType.ROOK) {
+            int[][] directionsRook;
+            // Creates all 4 different directions that a rook can go
+            directionsRook = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}};
                 for (int[] d : directionsRook) {
                     int r = row;
                     int c = col;
-
+                    // Goes through and increments the row and columns
                     while (true) {
-                        r += d[0];
-                        c += d[1];
-
+                        r += d[0]; // Goes based on the first position of the direction list
+                        c += d[1]; // Goes based on second
+                        // Checks for an out of bounds
                         if (r < 1 || r > 8 || c < 1 || c > 8) break;
 
                         ChessPosition newPos = new ChessPosition(r, c);
                         ChessPiece target = board.getPiece(newPos);
                         // Check to see if the square is empty
                         if (target == null) {
-                            moves.add(new ChessMove(myPosition, newPos, null));
+                            moveTaken.add(new ChessMove(myPosition, newPos, null));
                         } else {
                             // Checks to see if you are capturing an enemy piece
                             if (target.getTeamColor() != pieceMove.getTeamColor()) {
-                                moves.add(new ChessMove(myPosition, newPos, null));
+                                moveTaken.add(new ChessMove(myPosition, newPos, null));
                             }
                             break;
                         }
-
                     }
                 }
-            }else if(pieceMove.getPieceType() == PieceType.QUEEN) {
+            }
+        else if(pieceMove.getPieceType() == PieceType.QUEEN) {
             int[][] directionsQueen;
+            // Checks all 8 possible directions for a queen to move (bishop and rook combined)
             directionsQueen = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
             for (int[] d : directionsQueen) {
                 int r = row;
                 int c = col;
-
+                // Go through and increments until it finds and edge or a blocker
                 while (true) {
-                    r += d[0];
-                    c += d[1];
-
+                    r += d[0]; // 0th Index for directionQueen list
+                    c += d[1]; // 1st Index
+                    // Checks for out of bound
                     if (r < 1 || r > 8 || c < 1 || c > 8) break;
 
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
                     // Check to see if the square is empty
                     if (target == null) {
-                        moves.add(new ChessMove(myPosition, newPos, null));
+                        moveTaken.add(new ChessMove(myPosition, newPos, null));
                     } else {
                         // Checks to see if you are capturing an enemy piece
                         if (target.getTeamColor() != pieceMove.getTeamColor()) {
-                            moves.add(new ChessMove(myPosition, newPos, null));
+                            moveTaken.add(new ChessMove(myPosition, newPos, null));
                         }
                         break;
                     }
                 }
             }
-        }else if(pieceMove.getPieceType() == PieceType.KING) {
+        }
+        else if(pieceMove.getPieceType() == PieceType.KING) {
             int[][] directionsKing;
+            // Checks all 8 directions the king can go (same as queen)
             directionsKing = new int[][]{{1,0}, {-1,0}, {0,1}, {0,-1}, {1,1}, {1,-1}, {-1,1}, {-1,-1}};
             for (int[] d : directionsKing) {
                 int r = row;
                 int c = col;
-
+                    // No while loop because the king only can move one square
                     r += d[0];
                     c += d[1];
-
-                    if (r < 1 || r > 8 || c < 1 || c > 8) continue;
+                    // Checks for out of bound
+                    if (r < 1 || r > 8 || c < 1 || c > 8) continue; // continue instead of break
 
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
                     // Check to see if the square is empty
                     if (target == null) {
-                        moves.add(new ChessMove(myPosition, newPos, null));
+                        moveTaken.add(new ChessMove(myPosition, newPos, null));
                     } else {
                         // Checks to see if you are capturing an enemy piece
                         if (target.getTeamColor() != pieceMove.getTeamColor()) {
-                            moves.add(new ChessMove(myPosition, newPos, null));
+                            moveTaken.add(new ChessMove(myPosition, newPos, null));
                         }
                     }
-
             }
-        }else if(pieceMove.getPieceType() == PieceType.KNIGHT) {
+        }
+        else if(pieceMove.getPieceType() == PieceType.KNIGHT) {
             int[][] directionsKnight;
+            // Checks all 8 spots where the knight can move
             directionsKnight = new int[][]{{1,2}, {-1,2}, {1,-2}, {-1,-2}, {2,1}, {2,-1}, {-2,1}, {-2,-1}};
             for (int[] d : directionsKnight) {
                 int r = row;
                 int c = col;
-
+                    // Like king no while loop needed
                     r += d[0];
                     c += d[1];
-
-                    if (r < 1 || r > 8 || c < 1 || c > 8) continue;
+                    // Checks for out of bound
+                    if (r < 1 || r > 8 || c < 1 || c > 8) continue; // Continue instead of break
 
                     ChessPosition newPos = new ChessPosition(r, c);
                     ChessPiece target = board.getPiece(newPos);
                     // Check to see if the square is empty
                     if (target == null) {
-                        moves.add(new ChessMove(myPosition, newPos, null));
+                        moveTaken.add(new ChessMove(myPosition, newPos, null));
                     } else {
                         // Checks to see if you are capturing an enemy piece
                         if (target.getTeamColor() != pieceMove.getTeamColor()) {
-                            moves.add(new ChessMove(myPosition, newPos, null));
+                            moveTaken.add(new ChessMove(myPosition, newPos, null));
                         }
                         continue;
                     }
                 }
-            }else if (pieceMove.getPieceType() == PieceType.PAWN) {
-
+            }
+        else if (pieceMove.getPieceType() == PieceType.PAWN) {
+            // UNDER CONSTRUCTION
             int direction = (pieceMove.getTeamColor() == pieceColor.WHITE) ? 1 : -1;
 
             // 1. forward move
@@ -226,7 +232,7 @@ public class ChessPiece {
                 ChessPosition forwardPos = new ChessPosition(forwardRow, col);
 
                 if (board.getPiece(forwardPos) == null) {
-                    moves.add(new ChessMove(myPosition, forwardPos, null));
+                    moveTaken.add(new ChessMove(myPosition, forwardPos, null));
                 }
             }
 
@@ -246,7 +252,7 @@ public class ChessPiece {
                 ChessPiece target = board.getPiece(newPos);
 
                 if (target != null && target.getTeamColor() != pieceMove.getTeamColor()) {
-                    moves.add(new ChessMove(myPosition, newPos, null));
+                    moveTaken.add(new ChessMove(myPosition, newPos, null));
                 }
             }
             // 3. When you go forward Double
@@ -263,16 +269,16 @@ public class ChessPiece {
                     ChessPosition endPos = twoStep;
 
                     if (isPromotionRow) {
-                        moves.add(new ChessMove(myPosition, endPos, PieceType.QUEEN));
-                        moves.add(new ChessMove(myPosition, endPos, PieceType.ROOK));
-                        moves.add(new ChessMove(myPosition, endPos, PieceType.BISHOP));
-                        moves.add(new ChessMove(myPosition, endPos, PieceType.KNIGHT));
+                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.QUEEN));
+                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.ROOK));
+                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.BISHOP));
+                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.KNIGHT));
                     } else {
-                        moves.add(new ChessMove(myPosition, endPos, null));
+                        moveTaken.add(new ChessMove(myPosition, endPos, null));
                     }
                 }
             }
         }
-        return moves;
+        return moveTaken;
     }
 }
