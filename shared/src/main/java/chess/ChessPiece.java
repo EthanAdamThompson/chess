@@ -217,6 +217,11 @@ public class ChessPiece {
             int r = row;
             int c = col;
 
+            boolean isPromotionRow = (pieceMove.getTeamColor() == pieceColor.WHITE && forwardRow == 8)
+                    || (pieceMove.getTeamColor() == pieceColor.BLACK && forwardRow == 1);
+
+            boolean isWhite = pieceMove.getTeamColor() == pieceColor.WHITE;
+
             if (forwardRow >= 1 && forwardRow <= 8) {
                 ChessPosition forwardPos = new ChessPosition(forwardRow, col);
 
@@ -232,8 +237,8 @@ public class ChessPiece {
             };
 
             for (int[] d : captures) {
-                r += d[0];
-                c += d[1];
+                r = row + d[0];
+                c = col + d[1];
 
                 if (r < 1 || r > 8 || c < 1 || c > 8) continue;
 
@@ -242,6 +247,29 @@ public class ChessPiece {
 
                 if (target != null && target.getTeamColor() != pieceMove.getTeamColor()) {
                     moves.add(new ChessMove(myPosition, newPos, null));
+                }
+            }
+            // 3. When you go forward Double
+            int startRow = isWhite ? 2 : 7;
+            int doubleRow = row + (2 * direction); // So negative if Black
+
+            if (row == startRow) {
+                ChessPosition oneStep = new ChessPosition(row + direction, col);
+                ChessPosition twoStep = new ChessPosition(doubleRow, col);
+
+                if (board.getPiece(oneStep) == null &&
+                        board.getPiece(twoStep) == null) {
+
+                    ChessPosition endPos = twoStep;
+
+                    if (isPromotionRow) {
+                        moves.add(new ChessMove(myPosition, endPos, PieceType.QUEEN));
+                        moves.add(new ChessMove(myPosition, endPos, PieceType.ROOK));
+                        moves.add(new ChessMove(myPosition, endPos, PieceType.BISHOP));
+                        moves.add(new ChessMove(myPosition, endPos, PieceType.KNIGHT));
+                    } else {
+                        moves.add(new ChessMove(myPosition, endPos, null));
+                    }
                 }
             }
         }
