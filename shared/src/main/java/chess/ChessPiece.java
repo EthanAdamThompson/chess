@@ -93,16 +93,19 @@ public class ChessPiece {
                     // Check to see if the square is empty
                     if (target == null) { //
                         moveTaken.add(new ChessMove(myPosition, newPos, null));
-                    } else {
                         // Checks to see if you are capturing an enemy piece
-                        if (target.getTeamColor() != pieceMove.getTeamColor()) {
-                            moveTaken.add(new ChessMove(myPosition, newPos, null));
-                        }
+                    }
+                    else if (target.getTeamColor() != pieceMove.getTeamColor()){
+                        moveTaken.add(new ChessMove(myPosition, newPos, null));
                         break;
+                    }
+                    else {
+                        break;
+                    }
+
                     }
                 }
             }
-        }
         else if(pieceMove.getPieceType() == PieceType.ROOK) {
             int[][] directionsRook;
             // Creates all 4 different directions that a rook can go
