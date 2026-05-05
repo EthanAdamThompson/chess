@@ -2,7 +2,6 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -69,7 +68,6 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         // Declaration of Variables
-        ChessPiece piece = board.getPiece(myPosition);
         Collection<ChessMove> moveTaken = new ArrayList<>(); // Creates new List called
         ChessPiece pieceMove = board.getPiece(myPosition);
 
@@ -210,23 +208,19 @@ public class ChessPiece {
                         if (target.getTeamColor() != pieceMove.getTeamColor()) {
                             moveTaken.add(new ChessMove(myPosition, newPos, null));
                         }
-                        continue;
                     }
                 }
             }
         else if (pieceMove.getPieceType() == PieceType.PAWN) {
-            // UNDER CONSTRUCTION
             // Declaration of variables
-            int direction = (pieceMove.getTeamColor() == pieceColor.WHITE) ? 1 : -1;
+            int direction = (pieceMove.getTeamColor() == ChessGame.TeamColor.WHITE) ? 1 : -1;
             // forward move
             int forwardRow = row + direction;
-            int r = row;
-            int c = col;
-
-            boolean isPromotionRow = (pieceMove.getTeamColor() == pieceColor.WHITE && forwardRow == 8)
-                    || (pieceMove.getTeamColor() == pieceColor.BLACK && forwardRow == 1);
-
-            boolean isWhite = pieceMove.getTeamColor() == pieceColor.WHITE;
+            // boolean to see if the piece is on the promotion row
+            boolean isPromotionRow = (pieceMove.getTeamColor() == ChessGame.TeamColor.WHITE && forwardRow == 8)
+                    || (pieceMove.getTeamColor() == ChessGame.TeamColor.BLACK && forwardRow == 1);
+            // Assigns the color for ease of use later
+            boolean isWhite = pieceMove.getTeamColor() == ChessGame.TeamColor.WHITE;
 
             if (forwardRow >= 1 && forwardRow <= 8) {
                 ChessPosition forwardPos = new ChessPosition(forwardRow, col);
@@ -247,8 +241,8 @@ public class ChessPiece {
             int[][] captures = {{direction, 1}, {direction, -1}};
 
             for (int[] d : captures) {
-                r = row + d[0];
-                c = col + d[1];
+                int r = row + d[0];
+                int c = col + d[1];
 
                 if (r < 1 || r > 8 || c < 1 || c > 8) continue;
 
@@ -277,15 +271,13 @@ public class ChessPiece {
                 if (board.getPiece(oneStep) == null &&
                         board.getPiece(twoStep) == null) {
 
-                    ChessPosition endPos = twoStep;
-
                     if (isPromotionRow) {
-                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.QUEEN));
-                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.ROOK));
-                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.BISHOP));
-                        moveTaken.add(new ChessMove(myPosition, endPos, PieceType.KNIGHT));
+                        moveTaken.add(new ChessMove(myPosition, twoStep, PieceType.QUEEN));
+                        moveTaken.add(new ChessMove(myPosition, twoStep, PieceType.ROOK));
+                        moveTaken.add(new ChessMove(myPosition, twoStep, PieceType.BISHOP));
+                        moveTaken.add(new ChessMove(myPosition, twoStep, PieceType.KNIGHT));
                     } else {
-                        moveTaken.add(new ChessMove(myPosition, endPos, null));
+                        moveTaken.add(new ChessMove(myPosition, twoStep, null));
                     }
                 }
             }
