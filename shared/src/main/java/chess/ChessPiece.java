@@ -205,7 +205,7 @@ public class ChessPiece {
                         if (target.getTeamColor() != pieceMove.getTeamColor()) {
                             moves.add(new ChessMove(myPosition, newPos, null));
                         }
-                        break;
+                        continue;
                     }
                 }
             }else if (pieceMove.getPieceType() == PieceType.PAWN) {
