@@ -139,6 +139,7 @@ public class ChessGame {
             board.addPiece(end, piece);
         }
         else if (piece.getPieceType() == ChessPiece.PieceType.ROOK){
+            // For Castling
             if(piece.getTeamColor() == TeamColor.WHITE && start.getColumn() == 1){
                 whiteLeftRookMoved = true;
             }
