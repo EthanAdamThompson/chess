@@ -8,6 +8,8 @@ import java.util.Collection;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
+
+
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
@@ -31,7 +33,8 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+
+        this.teamTurn = team;
     }
 
     /**
@@ -50,7 +53,24 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        if (piece == null) {
+            return null;
+        }
+        Collection<ChessMove> possibleMoves = piece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new java.util.ArrayList<>();
+        for (ChessMove move : possibleMoves) {
+            ChessPiece captured = board.getPiece(move.getEndPosition());
+            board.addPiece(move.getEndPosition(), piece);
+            board.addPiece(startPosition, null);
+            boolean inCheck = isInCheck(piece.getTeamColor());
+            board.addPiece(startPosition, piece);
+            board.addPiece(move.getEndPosition(), captured);
+            if (!inCheck) {
+                validMoves.add(move);
+            }
+        }
+        return validMoves;
     }
 
     /**
