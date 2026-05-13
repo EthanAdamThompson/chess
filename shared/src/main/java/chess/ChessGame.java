@@ -112,12 +112,12 @@ public class ChessGame {
             if (piece.getTeamColor() == TeamColor.WHITE && row == 8) {
                 board.addPiece(end,
                         new ChessPiece(TeamColor.WHITE,
-                                ChessPiece.PieceType.QUEEN));
+                                move.getPromotionPiece()));
 
             } else if (piece.getTeamColor() == TeamColor.BLACK && row == 1) {
                 board.addPiece(end,
                         new ChessPiece(TeamColor.BLACK,
-                                ChessPiece.PieceType.QUEEN));
+                                move.getPromotionPiece()));
             }
         }
         else {
