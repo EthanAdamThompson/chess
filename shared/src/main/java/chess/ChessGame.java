@@ -118,10 +118,12 @@ public class ChessGame {
                 board.addPiece(end,
                         new ChessPiece(TeamColor.BLACK,
                                 move.getPromotionPiece()));
+            }else {
+                board.addPiece(end, piece);
             }
         }
         else {
-            board.addPiece(move.getEndPosition(), piece);
+            board.addPiece(end, piece);
         }
         if (teamTurn == TeamColor.WHITE) {
             teamTurn = TeamColor.BLACK;
