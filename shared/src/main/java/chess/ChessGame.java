@@ -14,6 +14,12 @@ import java.util.Objects;
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
+    private boolean whiteKingMoved = false;
+    private boolean blackKingMoved = false;
+    private boolean whiteLeftRookMoved = false;
+    private boolean whiteRightRookMoved = false;
+    private boolean blackLeftRookMoved = false;
+    private boolean blackRightRookMoved = false;
     public ChessGame() {
         this.board = new ChessBoard();
         board.resetBoard();
@@ -98,6 +104,7 @@ public class ChessGame {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
         ChessPiece piece = board.getPiece(start);
+
         if (piece == null || piece.getTeamColor() != teamTurn) {
             throw new InvalidMoveException();
         }
@@ -121,6 +128,30 @@ public class ChessGame {
             }else {
                 board.addPiece(end, piece);
             }
+        }
+        else if (piece.getPieceType() == ChessPiece.PieceType.KING){
+            if(piece.getTeamColor() == TeamColor.WHITE){
+                whiteKingMoved = true;
+            }
+            else if(piece.getTeamColor() == TeamColor.BLACK){
+                blackKingMoved = true;
+            }
+            board.addPiece(end, piece);
+        }
+        else if (piece.getPieceType() == ChessPiece.PieceType.ROOK){
+            if(piece.getTeamColor() == TeamColor.WHITE && start.getColumn() == 1){
+                whiteLeftRookMoved = true;
+            }
+            else if(piece.getTeamColor() == TeamColor.WHITE && start.getColumn() == 8){
+                whiteRightRookMoved = true;
+            }
+            else if(piece.getTeamColor() == TeamColor.BLACK && start.getColumn() == 1){
+                blackLeftRookMoved = true;
+            }
+            else if(piece.getTeamColor() == TeamColor.BLACK && start.getColumn() == 8){
+                blackRightRookMoved = true;
+            }
+            board.addPiece(end, piece);
         }
         else {
             board.addPiece(end, piece);
