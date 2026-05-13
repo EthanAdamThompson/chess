@@ -116,9 +116,6 @@ public class ChessGame {
                 board.addPiece(end,
                         new ChessPiece(TeamColor.WHITE,
                                 ChessPiece.PieceType.QUEEN));
-                board.addPiece(end,
-                        new ChessPiece(TeamColor.WHITE,
-                                ChessPiece.PieceType.ROOK));
             } else if (piece.getTeamColor() == TeamColor.BLACK && row == 1) {
                 board.addPiece(end,
                         new ChessPiece(TeamColor.BLACK,
