@@ -98,12 +98,11 @@ public class ChessPiece {
                     }
                     ChessPosition newPos = new ChessPosition(r,c);
                     ChessPiece target = board.getPiece(newPos);
-                    if(target == null){
+                    if(target == null && getPieceType() != PieceType.KING){
                         moves.add(new ChessMove(myPosition, newPos,null));
-                        if(getPieceType() == PieceType.KING){
-                            break;
-                        }
-                    } else if(target.getTeamColor() != pieceMove.getTeamColor() ){
+                    }else if(getPieceType() == PieceType.KING){
+                        break;
+                    }else if(target.getTeamColor() != pieceMove.getTeamColor() ){
                         moves.add(new ChessMove(myPosition, newPos,null));
                         break;
                     } else{
