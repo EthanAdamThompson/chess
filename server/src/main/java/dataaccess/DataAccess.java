@@ -22,7 +22,7 @@ public interface DataAccess {
 
     // Creating Game
     int createGame(String gameName) throws DataAccessException;
-    GameData getGame(String gameID) throws DataAccessException;
+    GameData getGame(int gameID) throws DataAccessException;
     List<GameData> listGames() throws  DataAccessException;
     void updateGame(GameData game) throws DataAccessException;
 }
