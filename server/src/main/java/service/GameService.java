@@ -27,6 +27,7 @@ public class GameService {
     public record CreateGameRequest(String authToken, String gameName){}
     public record CreateGameResult(int gameID){}
     public CreateGameResult createGame(CreateGameRequest request) throws DataAccessException{
-
+        int ID = dataAccess.createGame(request.gameName());
+        return new CreateGameResult(ID);
     }
 }
