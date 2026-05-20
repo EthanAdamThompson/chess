@@ -99,6 +99,7 @@ public class ChessPiece {
                     if(target == null && getPieceType() != PieceType.KING){
                         moves.add(new ChessMove(myPosition, newPos,null));
                     }else if(getPieceType() == PieceType.KING){
+                        moves.add(new ChessMove(myPosition, newPos,null));
                         break;
                     }else if(target.getTeamColor() != pieceMove.getTeamColor() ){
                         moves.add(new ChessMove(myPosition, newPos,null));
