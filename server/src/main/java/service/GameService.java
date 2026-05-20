@@ -12,7 +12,7 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    // Creat a list of all the games
+    // Create a list of all the games
     public record ListGameRequest(String authToken){}
     public record ListGameResult(List<GameData> games) {}
 
@@ -24,6 +24,9 @@ public class GameService {
     }
 
     //Create a game
-    public record CreateGameRequest(int gameID){}
-    public record CreateGameResult(List<GameData> games){}
+    public record CreateGameRequest(String authToken, String gameName){}
+    public record CreateGameResult(int gameID){}
+    public CreateGameResult createGame(CreateGameRequest request) throws DataAccessException{
+
+    }
 }
