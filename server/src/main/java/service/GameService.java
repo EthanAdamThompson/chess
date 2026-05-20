@@ -41,9 +41,21 @@ public class GameService {
 
     public record JoinGameRequest(String authToken, String playerColor, int gameID){}
     public void JoinGame(JoinGameRequest request) throws DataAccessException{
-        // Need some logic here about how to go about adding joining the game.
+        // Variables
+        AuthData auth = dataAccess.getAuth(request.authToken());
+        GameData game = dataAccess.getGame(request.gameID());
         // Start with Error handling (is it a bad request, unauthorized
-        // THen assign names to the different colors (check to see if the name is already taken)
+        if (request.playerColor() == null || (!request.playerColor().equalsIgnoreCase("WHITE")
+                && !request.playerColor().equalsIgnoreCase("BLACK"))) {
+            throw new BadRequestException("Error: bad request");
+        }
+        if (auth == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+        if (game == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+        // Then assign names to the different colors (check to see if the name is already taken)
         // End by creating a new game.
     }
 }
