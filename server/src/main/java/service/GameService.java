@@ -2,6 +2,7 @@ package service;
 
 import dataaccess.*;
 import model.GameData;
+import model.AuthData;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
+    // Creat a list of all the games
     public record ListGameRequest(String authToken){}
     public record ListGameResult(List<GameData> games) {}
 
@@ -20,4 +22,8 @@ public class GameService {
         }
         return new ListGameResult(dataAccess.listGames());
     }
+
+    //Create a game
+    public record CreateGameRequest(int gameID){}
+    public record CreateGameResult(List<GameData> games){}
 }
