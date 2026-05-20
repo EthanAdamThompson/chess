@@ -30,4 +30,11 @@ public class GameService {
         int ID = dataAccess.createGame(request.gameName());
         return new CreateGameResult(ID);
     }
+
+    // Join a game
+
+    public record JoinGameRequest(String authToken, String playerColor, int gameID){}
+    public void JoinGame(JoinGameRequest request) throws DataAccessException{
+        // Need some logic here about how to go about adding joining the game.
+    }
 }
