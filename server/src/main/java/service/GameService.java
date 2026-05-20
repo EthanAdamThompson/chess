@@ -56,6 +56,18 @@ public class GameService {
             throw new BadRequestException("Error: bad request");
         }
         // Then assign names to the different colors (check to see if the name is already taken)
-        // End by creating a new game.
+        String username = auth.username();
+        GameData updated;
+        if (request.playerColor().equalsIgnoreCase("WHITE")) {
+            if (game.whiteUsername() != null){
+                throw new AlreadyTakenException("Error: already taken");
+            }
+            updated = new GameData(game.gameID(), username, game.blackUsername(), game.gameName(), game.game());
+        } else {
+            if (game.blackUsername() != null) throw new AlreadyTakenException("Error: already taken");
+            updated = new GameData(game.gameID(), game.whiteUsername(), username, game.gameName(), game.game());
+        }
+        // End by updating Game
+        dataAccess.updateGame(updated);
     }
 }
