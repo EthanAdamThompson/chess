@@ -33,13 +33,13 @@ public class GameService {
         if(request.gameName() == null || request.gameName().isBlank()){
             throw new BadRequestException("Error: Bad Request");
         }
-        int ID = dataAccess.createGame(request.gameName());
-        return new CreateGameResult(ID);
+        int iD = dataAccess.createGame(request.gameName());
+        return new CreateGameResult(iD);
     }
 
     // Join a game
     public record JoinGameRequest(String authToken, String playerColor, int gameID){}
-    public void JoinGame(JoinGameRequest request) throws DataAccessException{
+    public void joinGame(JoinGameRequest request) throws DataAccessException{
         // Variables
         AuthData auth = dataAccess.getAuth(request.authToken());
         GameData game = dataAccess.getGame(request.gameID());
@@ -63,7 +63,9 @@ public class GameService {
             }
             updated = new GameData(game.gameID(), username, game.blackUsername(), game.gameName(), game.game());
         } else {
-            if (game.blackUsername() != null) throw new AlreadyTakenException("Error: already taken");
+            if (game.blackUsername() != null) {
+                throw new AlreadyTakenException("Error: already taken");
+            }
             updated = new GameData(game.gameID(), game.whiteUsername(), username, game.gameName(), game.game());
         }
         // End by updating Game

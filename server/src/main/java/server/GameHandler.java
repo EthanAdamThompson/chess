@@ -47,7 +47,7 @@ public class GameHandler {
             JsonObject body = gson.fromJson(context.body(), JsonObject.class);
             String playerColor = body != null && body.has("playerColor") ? body.get("playerColor").getAsString() : null;
             int gameID = (body != null) && body.has("gameID") ? body.get("gameID").getAsInt() : 0;
-            gameService.JoinGame(new GameService.JoinGameRequest(authToken, playerColor, gameID));
+            gameService.joinGame(new GameService.JoinGameRequest(authToken, playerColor, gameID));
             context.status(200).result("{}");
         } catch (BadRequestException exception) {
             context.status(400).json(new ErrorResponse(exception.getMessage()));

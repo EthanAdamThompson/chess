@@ -105,10 +105,7 @@ public class ChessPiece {
                         moves.add(new ChessMove(myPosition, newPos,null));
                         break;
                     } else{
-                        break;
-                    }
-                }
-            }
+                        break;}}}
         }else if(getPieceType() == PieceType.KNIGHT){
             directions = KNIGHT_JUMPS;
             for(int[] d : directions){
