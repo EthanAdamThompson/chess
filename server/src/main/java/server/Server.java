@@ -1,5 +1,6 @@
 package server;
 
+import com.google.gson.Gson;
 import dataaccess.MemoryDataAccess;
 import io.javalin.Javalin;
 import service.ClearService;
@@ -19,7 +20,22 @@ public class Server {
         var userHandler = new UserHandler(userService);
         var gameHandler = new GameHandler(gameService);
 
-        javalin = Javalin.create(config -> config.staticFiles.add("web"));
+        javalin = Javalin.create(config -> {
+            config.staticFiles.add("web");
+            config.jsonMapper(new io.javalin.json.JsonMapper() {
+                private final Gson gson = new Gson();
+
+                @Override
+                public String toJsonString(Object obj, java.lang.reflect.Type type) {
+                    return gson.toJson(obj);
+                }
+
+                @Override
+                public <T> T fromJsonString(String json, java.lang.reflect.Type targetType) {
+                    return gson.fromJson(json, targetType);
+                }
+            });
+        });
 
         // Clear the database
         javalin.delete("/db", ctx -> {
