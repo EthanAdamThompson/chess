@@ -16,8 +16,8 @@ public class GameService {
     public record ListGameRequest(String authToken){}
     public record ListGameResult(List<GameData> games) {}
 
-    public ListGameResult listGames(ListGameRequest req) throws DataAccessException{
-        if(dataAccess.getAuth(req.authToken()) == null) {
+    public ListGameResult listGames(ListGameRequest request) throws DataAccessException{
+        if(dataAccess.getAuth(request.authToken()) == null) {
             throw new UnauthorizedException("Error: Unauthorized");
         }
         return new ListGameResult(dataAccess.listGames());
@@ -38,7 +38,6 @@ public class GameService {
     }
 
     // Join a game
-
     public record JoinGameRequest(String authToken, String playerColor, int gameID){}
     public void JoinGame(JoinGameRequest request) throws DataAccessException{
         // Variables

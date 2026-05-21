@@ -36,7 +36,7 @@ public class UserHandler {
         } catch (BadRequestException exception) {
             context.status(400).json(new ErrorResponse(exception.getMessage()));
         } catch (AlreadyTakenException exception) {
-            context.status(403).json(new ErrorResponse(exception.getMessage()));
+            context.status(401).json(new ErrorResponse(exception.getMessage()));
         } catch (Exception exception) {
             context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
         }
@@ -44,12 +44,11 @@ public class UserHandler {
 
     public void logout(Context context) {
         try {
-            var request = gson.fromJson(context.body(), UserService.LogoutUserRequest.class);
-            context.status(200).json(userService.login(request));
-        } catch (BadRequestException exception) {
-            context.status(400).json(new ErrorResponse(exception.getMessage()));
+            String authToken = context.header("authorization");
+            userService.logout(new UserService.LogoutUserRequest(authToken));
+            context.status(200).result("{}");
         } catch (AlreadyTakenException exception) {
-            context.status(403).json(new ErrorResponse(exception.getMessage()));
+            context.status(401).json(new ErrorResponse(exception.getMessage()));
         } catch (Exception exception) {
             context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
         }
