@@ -98,7 +98,7 @@ public class ChessPiece {
                     ChessPiece target = board.getPiece(newPos);
                     if(target == null && getPieceType() != PieceType.KING){
                         moves.add(new ChessMove(myPosition, newPos,null));
-                    }else if(getPieceType() == PieceType.KING){
+                    }else if(target == null && getPieceType() == PieceType.KING){
                         moves.add(new ChessMove(myPosition, newPos,null));
                         break;
                     }else if(target.getTeamColor() != pieceMove.getTeamColor() ){
