@@ -11,7 +11,25 @@ public class Server {
     private final Javalin javalin;
 
     public Server() {
+        // Creation
+        var dataAccess = new MemoryDataAccess();
+        var userService = new UserService(dataAccess);
+        var gameService = new GameService(dataAccess);
+        var clearService = new ClearService(dataAccess);
+        var userHandler = new UserHandler(userService);
+        var gameHandler = new GameHandler(gameService);
+
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
+
+        // Clear the database
+        javalin.delete("/db", ctx -> {
+            try {
+                clearService.clear();
+                ctx.status(200).result("{}");
+            } catch (Exception e) {
+                ctx.status(500).json(new ErrorResponse("Error: " + e.getMessage()));
+            }
+        });
 
         // Register your endpoints and exception handlers here.
         // User endpoints
