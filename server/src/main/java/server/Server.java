@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.MemoryDataAccess;
 import io.javalin.Javalin;
+import org.jetbrains.annotations.NotNull;
 import service.ClearService;
 import service.GameService;
 import service.UserService;
@@ -24,14 +25,14 @@ public class Server {
             config.staticFiles.add("web");
             config.jsonMapper(new io.javalin.json.JsonMapper() {
                 private final Gson gson = new Gson();
-
+                @NotNull
                 @Override
-                public String toJsonString(Object obj, java.lang.reflect.Type type) {
-                    return gson.toJson(obj);
+                public String toJsonString(@NotNull Object object, @NotNull java.lang.reflect.Type type) {
+                    return gson.toJson(object);
                 }
-
+                @NotNull
                 @Override
-                public <T> T fromJsonString(String json, java.lang.reflect.Type targetType) {
+                public <T> T fromJsonString(@NotNull String json, @NotNull java.lang.reflect.Type targetType) {
                     return gson.fromJson(json, targetType);
                 }
             });
