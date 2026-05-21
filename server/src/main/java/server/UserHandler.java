@@ -2,6 +2,10 @@ package server;
 
 import com.google.gson.Gson;
 import service.UserService;
+import io.javalin.http.Context;
+import dataaccess.AlreadyTakenException;
+import dataaccess.BadRequestException;
+
 
 public class UserHandler {
 
@@ -11,4 +15,45 @@ public class UserHandler {
     public UserHandler(UserService userService) {
         this.userService = userService;
     }
+
+    public void register(Context context) {
+        try {
+            var request = gson.fromJson(context.body(), UserService.RegisterUserRequest.class);
+            context.status(200).json(userService.register(request));
+        } catch (BadRequestException exception) {
+            context.status(400).json(new ErrorResponse(exception.getMessage()));
+        } catch (AlreadyTakenException exception) {
+            context.status(403).json(new ErrorResponse(exception.getMessage()));
+        } catch (Exception exception) {
+            context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
+        }
+    }
+
+    public void login(Context context) {
+        try {
+            var request = gson.fromJson(context.body(), UserService.LoginUserRequest.class);
+            context.status(200).json(userService.login(request));
+        } catch (BadRequestException exception) {
+            context.status(400).json(new ErrorResponse(exception.getMessage()));
+        } catch (AlreadyTakenException exception) {
+            context.status(403).json(new ErrorResponse(exception.getMessage()));
+        } catch (Exception exception) {
+            context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
+        }
+    }
+
+    public void logout(Context context) {
+        try {
+            var request = gson.fromJson(context.body(), UserService.LogoutUserRequest.class);
+            context.status(200).json(userService.login(request));
+        } catch (BadRequestException exception) {
+            context.status(400).json(new ErrorResponse(exception.getMessage()));
+        } catch (AlreadyTakenException exception) {
+            context.status(403).json(new ErrorResponse(exception.getMessage()));
+        } catch (Exception exception) {
+            context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
+        }
+    }
+
+
 }

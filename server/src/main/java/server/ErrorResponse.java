@@ -1,4 +1,4 @@
 package server;
 
-public class ErrorResponse {
+public record ErrorResponse(String message) {
 }
