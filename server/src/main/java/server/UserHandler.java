@@ -5,6 +5,7 @@ import service.UserService;
 import io.javalin.http.Context;
 import dataaccess.AlreadyTakenException;
 import dataaccess.BadRequestException;
+import dataaccess.UnauthorizedException;
 
 
 public class UserHandler {
@@ -35,7 +36,7 @@ public class UserHandler {
             context.status(200).json(userService.login(request));
         } catch (BadRequestException exception) {
             context.status(400).json(new ErrorResponse(exception.getMessage()));
-        } catch (AlreadyTakenException exception) {
+        } catch (UnauthorizedException exception) {
             context.status(401).json(new ErrorResponse(exception.getMessage()));
         } catch (Exception exception) {
             context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
@@ -47,7 +48,7 @@ public class UserHandler {
             String authToken = context.header("authorization");
             userService.logout(new UserService.LogoutUserRequest(authToken));
             context.status(200).result("{}");
-        } catch (AlreadyTakenException exception) {
+        } catch (UnauthorizedException exception) {
             context.status(401).json(new ErrorResponse(exception.getMessage()));
         } catch (Exception exception) {
             context.status(500).json(new ErrorResponse("Error: " + exception.getMessage()));
