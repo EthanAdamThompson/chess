@@ -2,13 +2,13 @@ package dataaccess;
 import model.AuthData;
 import java.sql.SQLException;
 
-public class MySqlAuthDAO {
+public class MySqlAuthDAO implements AuthDAO{
     public MySqlAuthDAO() throws DataAccessException {
         configureDatabase();
     }
     private final String[] createStatements = {
             """
-        CREATE TABLE IF NOT EXISTS users (
+        CREATE TABLE IF NOT EXISTS auth (
             authToken VARCHAR(255) NOT NULL PRIMARY KEY,
             username VARCHAR(50) NOT NULL
         )
