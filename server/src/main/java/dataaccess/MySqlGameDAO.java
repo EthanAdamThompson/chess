@@ -61,22 +61,29 @@ public class MySqlGameDAO implements GameDAO{
             throw new DataAccessException(exception.getMessage());
         }
     }
-
+    //GameData getGame(int gameID) throws DataAccessException;
     @Override
-    public UserData getUser(String username) throws DataAccessException {
-        var sql = "SELECT username, password, email FROM users WHERE username=?";
+    public GameData getGame(int gameID) throws DataAccessException {
+        var sql = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games WHERE gameID=?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
+            ps.setInt(1, gameID);
             var rs = ps.executeQuery();
             if (rs.next()) {
-                return new UserData(rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("email"));
+                return new GameData(
+                        rs.getString("gameID"),
+                        rs.getString("whiteUsername"),
+                        rs.getString("blackUsername"),
+                        rs.getString("gameName"),
+                        gson.fromJson(rs.getString("game"), ChessGame.class));
             }
             return null;
         } catch (SQLException exception) {
             throw new DataAccessException(exception.getMessage());
         }
     }
+
+
+    //List<GameData> listGames() throws DataAccessException;
+    //void updateGame(GameData game) throws DataAccessException;
 }
