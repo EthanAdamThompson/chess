@@ -2,14 +2,11 @@ package dataaccess;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import model.GameData;
-import model.UserData;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlGameDAO {
+public class MySqlGameDAO implements GameDAO{
     private final Gson gson = new Gson();
 
     public MySqlGameDAO() throws DataAccessException {
@@ -43,15 +40,25 @@ public class MySqlGameDAO {
 
     // Copy and Pasted from MySqlUserDAO
     @Override
-    public void createGame(String gameName) throws DataAccessException {
+    public int createGame(String gameName) throws DataAccessException {
+        if (gameName == null || gameName.isBlank()) {
+            throw new DataAccessException("Game name cannot be empty");
+        }
         var sql = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
-            ps.setString(1, user.username());
-            ps.setString(2, hashed);
+            ps.setString(1, null);
+            ps.setString(2, null);
+            ps.setString(3, gameName);
+            ps.setString(4, gson.toJson(new ChessGame()));
             ps.executeUpdate();
+            var rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            throw new DataAccessException("Failed to get generated game ID");
         } catch (SQLException exception) {
-            throw new DataAccessException("User already exists: " + user.username());
+            throw new DataAccessException(exception.getMessage());
         }
     }
 
