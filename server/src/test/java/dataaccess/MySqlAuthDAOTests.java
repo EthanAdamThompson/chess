@@ -24,34 +24,34 @@ public class MySqlAuthDAOTests {
     @Test
     @Order(1)
     void createAuthSuccess() throws DataAccessException {
-        var auth = new AuthData("token123", "alice");
+        var auth = new AuthData("tokenAMERICA", "alice");
         assertDoesNotThrow(() -> authDAO.createAuth(auth));
         assertNotNull(authDAO.getAuth("alice"));
     }
     // createAuth - negative Should throw an exception
     @Test
     @Order(2)
-    void createUserDuplicate() throws DataAccessException {
-        var auth = new AuthData("token123", "alice");
+    void createAuthDuplicate() throws DataAccessException {
+        var auth = new AuthData("tokenAMERICA", "alice");
         authDAO.createAuth(auth);
         assertThrows(DataAccessException.class, () -> authDAO.createAuth(auth));
     }
     // AuthData getAuth(String authToken) throws DataAccessException;
-    // getUser - positive
+    // getAuth - positive
     @Test
     @Order(3)
-    void getUserSuccess() throws DataAccessException {
-        var user = new UserData("bob", "pass456", "bob@example.com");
-        authDAO.createUser(user);
-        var result = authDAO.getUser("bob");
+    void getAuthSuccess() throws DataAccessException {
+        var auth = new AuthData("tokenCANADA", "bobby");
+        authDAO.createAuth(auth);
+        var result = authDAO.getAuth("tokenCANADA");
         assertNotNull(result);
-        assertEquals("bob", result.username());
+        assertEquals("bobby", result.username());
     }
-    // getUser - negative should throw exception
+    // getAuth - negative should throw exception
     @Test
     @Order(4)
-    void getUserNotFound() throws DataAccessException {
-        var result = authDAO.getUser("nonexistent");
+    void getAuthNotFound() throws DataAccessException {
+        var result = authDAO.getAuth("nonexistent");
         assertNull(result);
     }
     // void deleteAuth(String authToken) throws DataAccessException;
