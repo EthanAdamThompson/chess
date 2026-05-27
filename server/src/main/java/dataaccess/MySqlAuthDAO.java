@@ -33,22 +33,20 @@ public class MySqlAuthDAO {
 
     // void createAuth(AuthData auth) throws DataAccessException;
     @Override
-    public void createUser(UserData user) throws DataAccessException {
-        var sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        String hashed = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+    public void createAuth(AuthData auth) throws DataAccessException {
+        var sql = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
-            ps.setString(1, user.username());
-            ps.setString(2, hashed);
-            ps.setString(3, user.email());
+            ps.setString(1, auth.authToken());
+            ps.setString(2, auth.username());
             ps.executeUpdate();
         } catch (SQLException exception) {
-            throw new DataAccessException("User already exists: " + user.username());
+            throw new DataAccessException(exception.getMessage());
         }
     }
     // AuthData getAuth(String authToken) throws DataAccessException;
     @Override
-    public UserData getUser(String username) throws DataAccessException {
+    public AuthData getAuth(String authToken) throws DataAccessException {
         var sql = "SELECT username, password, email FROM users WHERE username=?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
