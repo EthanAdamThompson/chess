@@ -85,5 +85,40 @@ public class MySqlGameDAO implements GameDAO{
 
 
     //List<GameData> listGames() throws DataAccessException;
+    @Override
+    public List<GameData> listGames() throws DataAccessException {
+        var sql = "SELECT gameID, whiteUsername, blackUsername, gameName, game FROM games";
+        var result = new ArrayList<GameData>();
+        try (var conn = DatabaseManager.getConnection();
+             var ps = conn.prepareStatement(sql)) {
+            var rs = ps.executeQuery();
+            while (rs.next()) {
+                return new GameData(
+                        rs.getString("gameID"),
+                        rs.getString("whiteUsername"),
+                        rs.getString("blackUsername"),
+                        rs.getString("gameName"),
+                        gson.fromJson(rs.getString("game"), ChessGame.class));
+            }
+            return result;
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
+        }
+    }
     //void updateGame(GameData game) throws DataAccessException;
+    @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        var sql = "UPDATE games SET whiteUsername=?, blackUsername=?, gameName=?, game=? WHERE gameID=?";
+        try (var conn = DatabaseManager.getConnection();
+             var ps = conn.prepareStatement(sql)) {
+            ps.setString(1, game.whiteUsername());
+            ps.setString(2, game.blackUsername());
+            ps.setString(3, game.gameName());
+            ps.setString(4, gson.toJson(game.game()));
+            ps.setInt(5, game.gameID());
+            ps.executeUpdate();
+        } catch (SQLException exception) {
+            throw new DataAccessException(exception.getMessage());
+        }
+    }
 }
