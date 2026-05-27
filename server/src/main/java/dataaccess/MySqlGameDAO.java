@@ -41,15 +41,14 @@ public class MySqlGameDAO {
         }
     }
 
+    // Copy and Pasted from MySqlUserDAO
     @Override
-    public void createUser(UserData user) throws DataAccessException {
-        var sql = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
-        String hashed = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+    public void createGame(String gameName) throws DataAccessException {
+        var sql = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
         try (var conn = DatabaseManager.getConnection();
-             var ps = conn.prepareStatement(sql)) {
+             var ps = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.username());
             ps.setString(2, hashed);
-            ps.setString(3, user.email());
             ps.executeUpdate();
         } catch (SQLException exception) {
             throw new DataAccessException("User already exists: " + user.username());
