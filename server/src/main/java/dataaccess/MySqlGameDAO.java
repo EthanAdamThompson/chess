@@ -71,7 +71,7 @@ public class MySqlGameDAO implements GameDAO{
             var rs = ps.executeQuery();
             if (rs.next()) {
                 return new GameData(
-                        rs.getString("gameID"),
+                        rs.getInt("gameID"),
                         rs.getString("whiteUsername"),
                         rs.getString("blackUsername"),
                         rs.getString("gameName"),
@@ -93,12 +93,12 @@ public class MySqlGameDAO implements GameDAO{
              var ps = conn.prepareStatement(sql)) {
             var rs = ps.executeQuery();
             while (rs.next()) {
-                return new GameData(
-                        rs.getString("gameID"),
+                result.add(new GameData(
+                        rs.getInt("gameID"),
                         rs.getString("whiteUsername"),
                         rs.getString("blackUsername"),
                         rs.getString("gameName"),
-                        gson.fromJson(rs.getString("game"), ChessGame.class));
+                        gson.fromJson(rs.getString("game"), ChessGame.class)));
             }
             return result;
         } catch (SQLException exception) {
