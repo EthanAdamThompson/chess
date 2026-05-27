@@ -1,7 +1,9 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.MemoryDataAccess;
+import dataaccess.DataAccess;
+import dataaccess.DataAccessException;
+import dataaccess.MySqlDataAccess;
 import io.javalin.Javalin;
 import org.jetbrains.annotations.NotNull;
 import service.ClearService;
@@ -14,7 +16,12 @@ public class Server {
 
     public Server() {
         // Creation
-        var dataAccess = new MemoryDataAccess();
+        DataAccess dataAccess;
+        try {
+            dataAccess = new MySqlDataAccess();
+        } catch (DataAccessException exception) {
+            throw new RuntimeException("Failed to initialize database: " + exception.getMessage());
+        }
         var userService = new UserService(dataAccess);
         var gameService = new GameService(dataAccess);
         var clearService = new ClearService(dataAccess);
