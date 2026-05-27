@@ -1,8 +1,5 @@
 package dataaccess;
 import model.AuthData;
-import model.UserData;
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.sql.SQLException;
 
 public class MySqlAuthDAO {
@@ -47,7 +44,7 @@ public class MySqlAuthDAO {
     // AuthData getAuth(String authToken) throws DataAccessException;
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        var sql = "SELECT authToken, username FROM auth WHERE username=?";
+        var sql = "SELECT authToken, username FROM auth WHERE authToken=?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
             ps.setString(1, authToken);
@@ -63,21 +60,14 @@ public class MySqlAuthDAO {
     }
     // void deleteAuth(String authToken) throws DataAccessException;
     @Override
-    public UserData getUser(String username) throws DataAccessException {
-        var sql = "SELECT username, password, email FROM users WHERE username=?";
+    public void deleteAuth(String authToken) throws DataAccessException {
+        var sql = "DELETE FROM auth WHERE authToken=?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            var rs = ps.executeQuery();
-            if (rs.next()) {
-                return new UserData(rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("email"));
-            }
-            return null;
+            ps.setString(1, authToken);
+            ps.executeQuery();
         } catch (SQLException exception) {
             throw new DataAccessException(exception.getMessage());
         }
     }
-
 }
