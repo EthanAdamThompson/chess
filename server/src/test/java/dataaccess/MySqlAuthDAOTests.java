@@ -55,20 +55,20 @@ public class MySqlAuthDAOTests {
         assertNull(result);
     }
     // void deleteAuth(String authToken) throws DataAccessException;
+    // deleteAuth
     @Test
     @Order(3)
-    void getUserSuccess() throws DataAccessException {
-        var user = new UserData("bob", "pass456", "bob@example.com");
-        authDAO.createUser(user);
-        var result = authDAO.getUser("bob");
-        assertNotNull(result);
-        assertEquals("bob", result.username());
+    void deleteAuthSuccess() throws DataAccessException {
+        var auth = new AuthData("tokenMEXICO", "chris");
+        authDAO.createAuth(auth);
+        authDAO.deleteAuth("tokenMEXICO");
+        assertNotNull(authDAO.getAuth("tokenMEXICO"));
     }
-    // getUser - negative should throw exception
+    // deleteAuth - negative should throw exception (nothing to delete)
     @Test
     @Order(4)
-    void getUserNotFound() throws DataAccessException {
-        var result = authDAO.getUser("nonexistent");
-        assertNull(result);
+    void deleteAuthNotFound() throws DataAccessException {
+        assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent"));
+
     }
 }
