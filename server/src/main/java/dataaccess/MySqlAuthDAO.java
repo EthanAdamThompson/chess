@@ -47,15 +47,14 @@ public class MySqlAuthDAO {
     // AuthData getAuth(String authToken) throws DataAccessException;
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
-        var sql = "SELECT username, password, email FROM users WHERE username=?";
+        var sql = "SELECT authToken, username FROM auth WHERE username=?";
         try (var conn = DatabaseManager.getConnection();
              var ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
+            ps.setString(1, authToken);
             var rs = ps.executeQuery();
             if (rs.next()) {
-                return new UserData(rs.getString("username"),
-                        rs.getString("password"),
-                        rs.getString("email"));
+                return new AuthData(rs.getString("authToken"),
+                        rs.getString("username"));
             }
             return null;
         } catch (SQLException exception) {
