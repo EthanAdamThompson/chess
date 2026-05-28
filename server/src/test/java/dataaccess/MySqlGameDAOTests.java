@@ -52,20 +52,21 @@ public class MySqlGameDAOTests {
         assertNull(result);
     }
     //List<GameData> listGames() throws DataAccessException;
-    // deleteAuth
+    // listGames
     @Test
     @Order(5)
-    void deleteAuthSuccess() throws DataAccessException {
-        var auth = new AuthData("tokenMEXICO", "chris");
-        authDAO.createAuth(auth);
-        authDAO.deleteAuth("tokenMEXICO");
-        assertNull(authDAO.getAuth("tokenMEXICO"));
+    void listGamesSuccess() throws DataAccessException {
+        gameDAO.createGame("gameNum1");
+        gameDAO.createGame("gameNum2");
+        var result = gameDAO.listGames();
+        assertEquals(2, result.size());
     }
-    // deleteAuth - negative should throw exception (nothing to delete)
+    // listGames - negative should throw exception (nothing to delete)
     @Test
     @Order(6)
-    void deleteAuthNotFound() throws DataAccessException {
-        assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent"));
+    void listGamesEmpty() throws DataAccessException {
+        var result = gameDAO.listGames();
+        assertEquals(0, result.size());
 
     }
     //void updateGame(GameData game) throws DataAccessException;
