@@ -21,7 +21,6 @@ public class MySqlGameDAOTests {
         dataAccess.clear();
     }
     //int createGame(String gameName) throws DataAccessException;
-
     // createGame - positive
     @Test
     @Order(1)
@@ -36,21 +35,20 @@ public class MySqlGameDAOTests {
         assertThrows(DataAccessException.class, () -> gameDAO.createGame(""));
     }
     //GameData getGame(int gameID) throws DataAccessException;
-    // getAuth - positive
+    // getGame - positive
     @Test
     @Order(3)
-    void getAuthSuccess() throws DataAccessException {
-        var auth = new AuthData("tokenCANADA", "bobby");
-        authDAO.createAuth(auth);
-        var result = authDAO.getAuth("tokenCANADA");
+    void getGameSuccess() throws DataAccessException {
+        int id = gameDAO.createGame("Game");
+        var result = gameDAO.getGame(id);
         assertNotNull(result);
-        assertEquals("bobby", result.username());
+        assertEquals("Game", result.gameName());
     }
-    // getAuth - negative should throw exception
+    // getGame - negative should throw exception
     @Test
     @Order(4)
-    void getAuthNotFound() throws DataAccessException {
-        var result = authDAO.getAuth("nonexistent");
+    void getGameNotFound() throws DataAccessException {
+        var result = gameDAO.getGame(99999);
         assertNull(result);
     }
     //List<GameData> listGames() throws DataAccessException;
