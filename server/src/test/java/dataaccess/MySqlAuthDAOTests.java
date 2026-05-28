@@ -1,7 +1,6 @@
 package dataaccess;
 
 import model.AuthData;
-import model.UserData;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 public class MySqlAuthDAOTests {
@@ -26,7 +25,7 @@ public class MySqlAuthDAOTests {
     void createAuthSuccess() throws DataAccessException {
         var auth = new AuthData("tokenAMERICA", "alice");
         assertDoesNotThrow(() -> authDAO.createAuth(auth));
-        assertNotNull(authDAO.getAuth("alice"));
+        assertNotNull(authDAO.getAuth("tokenAMERICA"));
     }
     // createAuth - negative Should throw an exception
     @Test
@@ -57,16 +56,16 @@ public class MySqlAuthDAOTests {
     // void deleteAuth(String authToken) throws DataAccessException;
     // deleteAuth
     @Test
-    @Order(3)
+    @Order(5)
     void deleteAuthSuccess() throws DataAccessException {
         var auth = new AuthData("tokenMEXICO", "chris");
         authDAO.createAuth(auth);
         authDAO.deleteAuth("tokenMEXICO");
-        assertNotNull(authDAO.getAuth("tokenMEXICO"));
+        assertNull(authDAO.getAuth("tokenMEXICO"));
     }
     // deleteAuth - negative should throw exception (nothing to delete)
     @Test
-    @Order(4)
+    @Order(6)
     void deleteAuthNotFound() throws DataAccessException {
         assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent"));
 
