@@ -19,9 +19,9 @@ public class MySqlUserDAO implements UserDAO{
 
     private void configureDatabase() throws DataAccessException {
         DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
+        try (var connect = DatabaseManager.getConnection()) {
             for (var statement : createStatements) {
-                try (var ps = conn.prepareStatement(statement)) {
+                try (var ps = connect.prepareStatement(statement)) {
                     ps.executeUpdate();
                 }
             }
