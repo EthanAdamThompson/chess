@@ -20,7 +20,6 @@ public class Server {
         try {
             dataAccess = new MySqlDataAccess();
         } catch (DataAccessException exception) {
-            exception.printStackTrace();
             throw new RuntimeException("Failed to initialize database: " + exception.getMessage());
         }
         var userService = new UserService(dataAccess);
