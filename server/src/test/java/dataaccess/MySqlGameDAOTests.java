@@ -2,9 +2,8 @@ package dataaccess;
 
 import model.GameData;
 import org.junit.jupiter.api.*;
-
+import chess.ChessGame;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 public class MySqlGameDAOTests {
     private static MySqlGameDAO gameDAO;
@@ -52,7 +51,7 @@ public class MySqlGameDAOTests {
         assertNull(result);
     }
     //List<GameData> listGames() throws DataAccessException;
-    // listGames
+    // listGames - positive test
     @Test
     @Order(5)
     void listGamesSuccess() throws DataAccessException {
@@ -70,19 +69,22 @@ public class MySqlGameDAOTests {
 
     }
     //void updateGame(GameData game) throws DataAccessException;
+    // updateGame - positive test
     @Test
     @Order(7)
-    void deleteAuthSuccess() throws DataAccessException {
-        var auth = new AuthData("tokenMEXICO", "chris");
-        authDAO.createAuth(auth);
-        authDAO.deleteAuth("tokenMEXICO");
-        assertNull(authDAO.getAuth("tokenMEXICO"));
+    void updateGameSuccess() throws DataAccessException {
+        int id = gameDAO.createGame("updateTest");
+        var updated = new GameData(id, "whitePlayer", "blackPlayer", "updateTest", new ChessGame());
+        assertDoesNotThrow(() -> gameDAO.updateGame(updated));
+        var result = gameDAO.getGame(id);
+        assertEquals("whitePlayer", result.whiteUsername());
     }
-    // deleteAuth - negative should throw exception (nothing to delete)
+    // updateGame - negative test should throw exception (nothing to delete)
     @Test
     @Order(8)
     void deleteAuthNotFound() throws DataAccessException {
-        assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent"));
+        var fake = new GameData(99999, "whitePlayer", "blackPlayer", "fake", new ChessGame());
+        assertDoesNotThrow(() -> gameDAO.updateGame(fake));
 
     }
 }
