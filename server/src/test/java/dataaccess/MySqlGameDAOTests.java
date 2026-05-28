@@ -1,7 +1,10 @@
 package dataaccess;
 
-import model.AuthData;
+import model.GameData;
 import org.junit.jupiter.api.*;
+
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 public class MySqlGameDAOTests {
     private static MySqlGameDAO gameDAO;
@@ -17,25 +20,22 @@ public class MySqlGameDAOTests {
     void clear() throws DataAccessException {
         dataAccess.clear();
     }
-    // void createAuth(AuthData auth) throws DataAccessException;
+    //int createGame(String gameName) throws DataAccessException;
 
-    // createAuth - positive
+    // createGame - positive
     @Test
     @Order(1)
-    void createAuthSuccess() throws DataAccessException {
-        var auth = new AuthData("tokenAMERICA", "alice");
-        assertDoesNotThrow(() -> authDAO.createAuth(auth));
-        assertNotNull(authDAO.getAuth("tokenAMERICA"));
+    void createGameSuccess() throws DataAccessException {
+        int id = gameDAO.createGame("game1");
+        assertTrue(id > 0);
     }
-    // createAuth - negative Should throw an exception
+    // createGame - negative Should throw an exception
     @Test
     @Order(2)
-    void createAuthDuplicate() throws DataAccessException {
-        var auth = new AuthData("tokenAMERICA", "alice");
-        authDAO.createAuth(auth);
-        assertThrows(DataAccessException.class, () -> authDAO.createAuth(auth));
+    void createGameNoName() throws DataAccessException {
+        assertThrows(DataAccessException.class, () -> gameDAO.createGame(""));
     }
-    // AuthData getAuth(String authToken) throws DataAccessException;
+    //GameData getGame(int gameID) throws DataAccessException;
     // getAuth - positive
     @Test
     @Order(3)
@@ -53,7 +53,7 @@ public class MySqlGameDAOTests {
         var result = authDAO.getAuth("nonexistent");
         assertNull(result);
     }
-    // void deleteAuth(String authToken) throws DataAccessException;
+    //List<GameData> listGames() throws DataAccessException;
     // deleteAuth
     @Test
     @Order(5)
@@ -66,6 +66,22 @@ public class MySqlGameDAOTests {
     // deleteAuth - negative should throw exception (nothing to delete)
     @Test
     @Order(6)
+    void deleteAuthNotFound() throws DataAccessException {
+        assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent"));
+
+    }
+    //void updateGame(GameData game) throws DataAccessException;
+    @Test
+    @Order(7)
+    void deleteAuthSuccess() throws DataAccessException {
+        var auth = new AuthData("tokenMEXICO", "chris");
+        authDAO.createAuth(auth);
+        authDAO.deleteAuth("tokenMEXICO");
+        assertNull(authDAO.getAuth("tokenMEXICO"));
+    }
+    // deleteAuth - negative should throw exception (nothing to delete)
+    @Test
+    @Order(8)
     void deleteAuthNotFound() throws DataAccessException {
         assertDoesNotThrow(() -> authDAO.deleteAuth("nonexistent"));
 
