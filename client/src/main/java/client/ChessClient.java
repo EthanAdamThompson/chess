@@ -1,9 +1,8 @@
 package client;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
-public class ChessCleint {
+public class ChessClient {
     private final ServerFacade server;
     private final Scanner scanner = new Scanner(System.in);
 
