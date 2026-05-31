@@ -10,5 +10,7 @@ public class ChessClient {
     private String username = null;
     // for number -> gameID mapping
     private ServerFacade.GameData[] cachedGames = null;
-
+    public ChessClient(int port) {
+        this.server = new ServerFacade(port);
+    }
 }
