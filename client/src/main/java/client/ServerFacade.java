@@ -31,7 +31,50 @@ public class ServerFacade {
     public void logout(String authToken) throws Exception {
         makeRequest("DELETE", "/session", null, authToken, null);
     }
-
     // Game Stuff
+    public int createGame(String gameName, String authToken) throws Exception {
+        var body = Map.of("gameName", gameName);
+        var result = makeRequest("POST", "/game", body, authToken, Map.class);
+        return ((Double) result.get("gameID")).intValue();
+    }
+    public GameData[] listGames(String authToken) throws Exception {
+        var result = makeRequest("GET", "/game", null, authToken, ListGamesResponse.class);
+        return result.games();
+    }
+    public void joinGame(int gameID, String playerColor, String authToken) throws Exception {
+        var body = Map.of("gameID", gameID, "playerColor", playerColor);
+        makeRequest("PUT", "/game", body, authToken, null);
+    }
     // HTTP stuff
+    private <T> T makeRequest(String method, String path, Object body,
+                              String authToken, Class<T> responseClass) throws Exception {
+        URI uri = new URI(serversUrl + path);
+        HttpURLConnection http = (HttpURLConnection) uri.toURL().openConnection();
+        http.setRequestMethod(method);
+        http.setRequestProperty("Content-Type", "application/json");
+        if (authToken != null) {
+            http.setRequestProperty("authorization", authToken);
+        }
+        if (body != null) {
+            http.setDoOutput(true);
+            try (var outputStream = http.getOutputStream()) {
+                outputStream.write(gson.toJson(body).getBytes());
+            }
+        }
+        http.connect();
+        int status = http.getResponseCode();
+        if (status >= 400) {
+            InputStream err = http.getErrorStream();
+            String msg = err != null ? new String(err.readAllBytes()) : "Error " + status;
+            // Pull out the server's "message" field if present
+            var parsed = gson.fromJson(msg, Map.class);
+            String serverMsg = parsed != null && parsed.containsKey("message")
+                    ? (String) parsed.get("message") : msg;
+            throw new Exception(serverMsg);
+        }
+        if (responseClass == null) return null;
+        try (var inputStream = http.getInputStream()) {
+            return gson.fromJson(new String(inputStream.readAllBytes()), responseClass);
+        }
+    }
 }
