@@ -76,10 +76,10 @@ public class ChessClient {
         return switch (cmd) {
             case "help" -> postloginHelp();
             case "logout" -> logout();
-            case "createGame" -> createGame(params);
-            case "listGame" -> listGames();
-            case "playGame" -> playGame(params);
-            case "observeGame" -> observeGame(params);
+            case "creategame" -> createGame(params);
+            case "listgame" -> listGames();
+            case "playgame" -> playGame(params);
+            case "observegame" -> observeGame(params);
             default -> "Unknown command. Type 'help' for options.";
         };
     }
@@ -89,10 +89,10 @@ public class ChessClient {
                 Available commands:
                   help                   - Show help
                   logout                 - Log out of your account
-                  createGame <name>      - Create a new game
-                  listGame               - List all available games
-                  playGame <#> <color>   - Join a game as WHITE or BLACK
-                  observeGame <#>        - Observe a game""";
+                  creategame <name>      - Create a new game
+                  listgame               - List all available games
+                  playgame <#> <color>   - Join a game as WHITE or BLACK
+                  observegame <#>        - Observe a game""";
     }
 
     private String logout() throws Exception {
