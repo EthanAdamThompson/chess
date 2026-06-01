@@ -108,6 +108,44 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, () -> facade.listGames("fake-token"));
     }
 
+    // Join Game tests
+    @Test
+    void joinGameAsWhite() throws Exception {
+        var auth = facade.register("Alexa", "password1234", "alexa@email.com");
+        int gameID = facade.createGame("testgame", auth.authToken());
+        assertDoesNotThrow(() -> facade.joinGame(gameID, "WHITE", auth.authToken()));
+    }
+
+    @Test
+    void joinGameAsBlack() throws Exception {
+        var auth = facade.register("Bobby", "password1234", "bobby@email.com");
+        int gameID = facade.createGame("testgame", auth.authToken());
+        assertDoesNotThrow(() -> facade.joinGame(gameID, "BLACK", auth.authToken()));
+    }
+
+    @Test
+    void joinGameColorAlreadyTaken() throws Exception {
+        var auth1 = facade.register("Alexa", "password1234", "alexa@email.com");
+        var auth2 = facade.register("Bobby", "passwordabcd", "bobby@email.com");
+        int gameID = facade.createGame("testgame", auth1.authToken());
+        facade.joinGame(gameID, "WHITE", auth1.authToken());
+        assertThrows(Exception.class, () -> facade.joinGame(gameID, "WHITE", auth2.authToken()));
+    }
+
+    @Test
+    void joinGameInvalidID() throws Exception {
+        var auth = facade.register("Chris", "password1234", "chris@email.com");
+        assertThrows(Exception.class, () -> facade.joinGame(99999, "WHITE", auth.authToken()));
+    }
+
+    @Test
+    void joinGameInvalidAuth() throws Exception {
+        var auth = facade.register("David", "password1234", "david@email.com");
+        int gameID = facade.createGame("testgame", auth.authToken());
+        assertThrows(Exception.class, () ->
+                facade.joinGame(gameID, "WHITE", "fake-token"));
+    }
+
 
 
 
