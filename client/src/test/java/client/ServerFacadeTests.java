@@ -40,4 +40,38 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, () -> facade.register("Alexa", "password2", "alexa2@email.com"));
     }
 
+    // Login tests
+    @Test
+    void loginSuccess() throws Exception{
+        facade.register("Alexa", "password1234", "alexa@email.com");
+        var auth = facade.login("Alexa", "password1234");
+        assertNotNull(auth.authToken());
+        assertEquals("Alexa", auth.username());
+    }
+
+    @Test
+    void loginWrongPassword() throws Exception {
+        facade.register("Bobby", "passwordabcd", "bobby@email.com");
+        assertThrows(Exception.class, () -> facade.login("Bobby", "password1234"));
+    }
+
+    @Test
+    void loginNonexistentUser() {
+        assertThrows(Exception.class, () -> facade.login("nobody", "password"));
+    }
+
+    // Logout Tests
+
+    @Test
+    void logoutSuccess() throws Exception {
+        var auth = facade.register("Chris", "password1234", "chris@email.com");
+        assertDoesNotThrow(() -> facade.logout(auth.authToken()));
+    }
+
+    @Test
+    void logoutInvalidToken() {
+        assertThrows(Exception.class, () -> facade.logout("12345"));
+    }
+
+
 }
