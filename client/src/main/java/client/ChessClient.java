@@ -143,11 +143,19 @@ public class ChessClient {
         int gameNumber;
         String color;
         if (params.length >= 2) {
-            gameNumber = Integer.parseInt(params[0]);
+            try {
+                gameNumber = Integer.parseInt(params[0]);
+            } catch (NumberFormatException exception) {
+                return "Invalid game number.";
+            }
             color = params[1].toUpperCase();
         } else {
             System.out.print("Game number: ");
-            gameNumber = Integer.parseInt(scanner.nextLine().trim());
+            try {
+                gameNumber = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException exception) {
+                return "Invalid game number.";
+            }
             System.out.print("Color (WHITE/BLACK): ");
             color = scanner.nextLine().trim().toUpperCase();
         }

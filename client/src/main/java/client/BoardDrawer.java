@@ -3,8 +3,8 @@ package client;
 public class BoardDrawer {
     // ANSI color codes
     private static final String RESET = "\u001B[0m";
-    private static final String DARK_SQUARE = "\u001B[48;5;94m";   // brown
-    private static final String LIGHT_SQUARE = "\u001B[48;5;223m"; // tan
+    private static final String DARK_SQUARE = "\u001B[48;5;223m";  // tan (was brown)
+    private static final String LIGHT_SQUARE = "\u001B[48;5;94m";  // brown (was tan)
     private static final String WHITE_PIECE = "\u001B[1;97m";      // bright white
     private static final String BLACK_PIECE = "\u001B[1;34m";      // blue
     private static final String BORDER = "\u001B[100m";            // dark gray background
