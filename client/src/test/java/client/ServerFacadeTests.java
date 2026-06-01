@@ -86,6 +86,30 @@ public class ServerFacadeTests {
         assertThrows(Exception.class, () -> facade.createGame("testgame", null));
     }
 
+    // List Game Tests
+    @Test
+    void listGamesEmpty() throws Exception {
+        var auth = facade.register("Alexa", "password1234", "alexa@email.com");
+        var games = facade.listGames(auth.authToken());
+        assertEquals(0, games.length);
+    }
+
+    @Test
+    void listGamesWithGames() throws Exception {
+        var auth = facade.register("Alexa", "password1233", "p1@email.com");
+        facade.createGame("game1", auth.authToken());
+        facade.createGame("game2", auth.authToken());
+        var games = facade.listGames(auth.authToken());
+        assertEquals(2, games.length);
+    }
+
+    @Test
+    void listGamesInvalidAuth() {
+        assertThrows(Exception.class, () -> facade.listGames("fake-token"));
+    }
+
+
+
 
 
 }
