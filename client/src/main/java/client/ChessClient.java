@@ -1,5 +1,6 @@
 package client;
 
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class ChessClient {
@@ -171,5 +172,34 @@ public class ChessClient {
 
         BoardDrawer.draw(false); // observers see white's perspective
         return "";
+    }
+
+    public void run() {
+        System.out.println("♕ Welcome to 240 Chess. Type 'help' to get started.");
+        while (true) {
+            String prompt = isLoggedIn() ? "[" + username + "] >> " : "[LOGGED_OUT] >> ";
+            System.out.print(prompt);
+            String line = scanner.nextLine().trim();
+            String[] tokens = line.split("\\s+");
+            String cmd;
+            if(tokens.length > 0){
+                cmd = tokens[0].toLowerCase();
+            }else {
+                cmd = "";
+            }
+            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+
+            try {
+                String result = isLoggedIn() ? handlePostlogin(cmd, params) : handlePrelogin(cmd, params);
+                if (result == null) break; // quit signal
+                if (!result.isEmpty()) System.out.println(result);
+            } catch (Exception exception) {
+                System.out.println("Error: " + exception.getMessage());
+            }
+        }
+    }
+
+    private boolean isLoggedIn() {
+        return authToken != null;
     }
 }
