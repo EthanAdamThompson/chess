@@ -116,7 +116,9 @@ public class ChessClient {
 
     private String listGames() throws Exception {
         cachedGames = server.listGames(authToken);
-        if (cachedGames.length == 0) return "No games available.";
+        if (cachedGames.length == 0) {
+            return "No games available.";
+        }
         var sb = new StringBuilder();
         for (int i = 0; i < cachedGames.length; i++) {
             var games = cachedGames[i];
@@ -149,9 +151,15 @@ public class ChessClient {
             System.out.print("Color (WHITE/BLACK): ");
             color = scanner.nextLine().trim().toUpperCase();
         }
-        if (cachedGames == null) return "Please run 'list' first.";
-        if (gameNumber < 1 || gameNumber > cachedGames.length) return "Invalid game number.";
-        if (!color.equals("WHITE") && !color.equals("BLACK")) return "Color must be WHITE or BLACK.";
+        if (cachedGames == null) {
+            return "Please run 'list' first.";
+        }
+        if (gameNumber < 1 || gameNumber > cachedGames.length){
+            return "Invalid game number.";
+        }
+        if (!color.equals("WHITE") && !color.equals("BLACK")) {
+            return "Color must be WHITE or BLACK.";
+        }
 
         int gameID = cachedGames[gameNumber - 1].gameID();
         server.joinGame(gameID, color, authToken);
@@ -167,8 +175,12 @@ public class ChessClient {
             System.out.print("Game number: ");
             gameNumber = Integer.parseInt(scanner.nextLine().trim());
         }
-        if (cachedGames == null) return "Please run 'list' first.";
-        if (gameNumber < 1 || gameNumber > cachedGames.length) return "Invalid game number.";
+        if (cachedGames == null) {
+            return "Please run 'list' first.";
+        }
+        if (gameNumber < 1 || gameNumber > cachedGames.length) {
+            return "Invalid game number.";
+        }
 
         BoardDrawer.draw(false); // observers see white's perspective
         return "";
@@ -191,8 +203,12 @@ public class ChessClient {
 
             try {
                 String result = isLoggedIn() ? handlePostlogin(cmd, params) : handlePrelogin(cmd, params);
-                if (result == null) break; // quit signal
-                if (!result.isEmpty()) System.out.println(result);
+                if (result == null) {
+                    break;
+                    } // quit signal
+                if (!result.isEmpty()) {
+                    System.out.println(result);
+                }
             } catch (Exception exception) {
                 System.out.println("Error: " + exception.getMessage());
             }
