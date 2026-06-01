@@ -33,6 +33,23 @@ public class ChessClient {
                   quit               - quit the program""";
     }
 
+    private String login(String[] params) throws Exception {
+        String username, password;
+        if (params.length >= 2) {
+            username = params[0];
+            password = params[1];
+        } else {
+            System.out.print("Username: ");
+            username = scanner.nextLine().trim();
+            System.out.print("Password: ");
+            password = scanner.nextLine().trim();
+        }
+        var auth = server.login(username, password);
+        this.authToken = auth.authToken();
+        this.username = auth.username();
+        return "Logged in as " + this.username + ".";
+    }
+
     // Post login UI
     private String handlePostlogin(String cmd, String[] params) throws Exception {
         return switch (cmd) {
