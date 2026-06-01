@@ -45,4 +45,15 @@ public class ChessClient {
             default -> "Unknown command. Type 'help' for options.";
         };
     }
+
+    private String postloginHelp() {
+        return """
+                Available commands:
+                  help                   - Show help
+                  logout                 - Log out of your account
+                  createGame <name>      - Create a new game
+                  listGame               - List all available games
+                  playGame <#> <color>   - Join a game as WHITE or BLACK
+                  observeGame <#>        - Observe a game""";
+    }
 }
