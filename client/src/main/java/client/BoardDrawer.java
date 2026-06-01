@@ -33,4 +33,31 @@ public class BoardDrawer {
         }
         System.out.println();
     }
+
+    private static void printColLabels(String[] cols, boolean reversed) {
+        System.out.print(BORDER + BORDER_TEXT + "   ");
+        if (reversed) {
+            for (int i = 7; i >= 0; i--) System.out.print(" " + cols[i] + " ");
+        } else {
+            for (String col : cols) System.out.print(" " + col + " ");
+        }
+        System.out.println("   " + RESET);
+    }
+
+    private static void printRow(int row, boolean blackPerspective) {
+        System.out.print(BORDER + BORDER_TEXT + " " + row + " " + RESET);
+
+        for (int col = 0; col < 8; col++) {
+            int actualCol = blackPerspective ? 7 - col : col;
+            boolean lightSquare = (row + actualCol) % 2 != 0;
+            String squareColor = lightSquare ? LIGHT_SQUARE : DARK_SQUARE;
+            String piece = getPiece(row, actualCol);
+            String pieceColor = isPieceWhite(row) ? WHITE_PIECE : BLACK_PIECE;
+
+            System.out.print(squareColor + pieceColor + " " + piece + " " + RESET);
+        }
+
+        System.out.print(BORDER + BORDER_TEXT + " " + row + " " + RESET);
+        System.out.println();
+    }
 }
