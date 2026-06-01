@@ -157,4 +157,19 @@ public class ChessClient {
         BoardDrawer.draw(color.equals("BLACK")); // not created yet
         return "";
     }
+
+    private String observeGame(String[] params) throws Exception {
+        int gameNumber;
+        if (params.length >= 1) {
+            gameNumber = Integer.parseInt(params[0]);
+        } else {
+            System.out.print("Game number: ");
+            gameNumber = Integer.parseInt(scanner.nextLine().trim());
+        }
+        if (cachedGames == null) return "Please run 'list' first.";
+        if (gameNumber < 1 || gameNumber > cachedGames.length) return "Invalid game number.";
+
+        BoardDrawer.draw(false); // observers see white's perspective
+        return "";
+    }
 }
