@@ -13,4 +13,28 @@ public class ChessClient {
     public ChessClient(int port) {
         this.server = new ServerFacade(port);
     }
+
+    // Prelogin UI
+    private String handlePrelogin(String cmd, String[] params) throws Exception {
+        return switch (cmd) {
+            case "help" -> preloginHelp();
+            case "quit" -> null; // signals run() to exit
+            case "login" -> login(params);
+            case "register" -> register(params);
+            default -> "Unknown command. Type 'help' for options.";
+        };
+    }
+
+    // Post login UI
+    private String handlePostlogin(String cmd, String[] params) throws Exception {
+        return switch (cmd) {
+            case "help" -> postloginHelp();
+            case "logout" -> logout();
+            case "createGame" -> createGame(params);
+            case "listGame" -> listGames();
+            case "playGame" -> playGame(params);
+            case "observeGame" -> observeGame(params);
+            default -> "Unknown command. Type 'help' for options.";
+        };
+    }
 }
