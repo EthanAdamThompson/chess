@@ -49,6 +49,26 @@ public class ChessClient {
         this.username = auth.username();
         return "Logged in as " + this.username + ".";
     }
+    // Register new user
+    private String register(String[] params) throws Exception {
+        String username, password, email;
+        if (params.length >= 3) {
+            username = params[0];
+            password = params[1];
+            email = params[2];
+        } else {
+            System.out.print("Username: ");
+            username = scanner.nextLine().trim();
+            System.out.print("Password: ");
+            password = scanner.nextLine().trim();
+            System.out.print("Email: ");
+            email = scanner.nextLine().trim();
+        }
+        var auth = server.register(username, password, email);
+        this.authToken = auth.authToken();
+        this.username = auth.username();
+        return "Registered and logged in as " + this.username + ".";
+    }
 
     // Post login UI
     private String handlePostlogin(String cmd, String[] params) throws Exception {
