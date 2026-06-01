@@ -73,4 +73,11 @@ public class ChessClient {
                   playGame <#> <color>   - Join a game as WHITE or BLACK
                   observeGame <#>        - Observe a game""";
     }
+
+    private String logout() throws Exception {
+        server.logout(authToken);
+        authToken = null;
+        username = null;
+        return "Logged out.";
+    }
 }
