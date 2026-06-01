@@ -112,4 +112,27 @@ public class ChessClient {
         server.createGame(gameName, authToken);
         return "Game '" + gameName + "' created.";
     }
+
+    private String listGames() throws Exception {
+        cachedGames = server.listGames(authToken);
+        if (cachedGames.length == 0) return "No games available.";
+        var sb = new StringBuilder();
+        for (int i = 0; i < cachedGames.length; i++) {
+            var games = cachedGames[i];
+            String white;
+            if(games.whiteUsername() != null) {
+                white = games.whiteUsername();
+            }else {
+                white = "(open)";
+            }
+            String black;
+            if(games.blackUsername() != null) {
+                black = games.blackUsername();
+            }else {
+                black = "(open)";
+            }
+            sb.append(String.format("  %d. %s  [W: %s | B: %s]%n", i + 1, games.gameName(), white, black));
+        }
+        return sb.toString().stripTrailing();
+    }
 }
