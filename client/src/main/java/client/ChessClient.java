@@ -24,6 +24,14 @@ public class ChessClient {
             default -> "Unknown command. Type 'help' for options.";
         };
     }
+    private String preloginHelp() {
+        return """
+                Available commands:
+                  help               - Show help
+                  login              - Log in to previously made account
+                  register           - make a new account
+                  quit               - quit the program""";
+    }
 
     // Post login UI
     private String handlePostlogin(String cmd, String[] params) throws Exception {
