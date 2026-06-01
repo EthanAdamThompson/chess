@@ -135,4 +135,26 @@ public class ChessClient {
         }
         return sb.toString().stripTrailing();
     }
+
+    private String playGame(String[] params) throws Exception {
+        int gameNumber;
+        String color;
+        if (params.length >= 2) {
+            gameNumber = Integer.parseInt(params[0]);
+            color = params[1].toUpperCase();
+        } else {
+            System.out.print("Game number: ");
+            gameNumber = Integer.parseInt(scanner.nextLine().trim());
+            System.out.print("Color (WHITE/BLACK): ");
+            color = scanner.nextLine().trim().toUpperCase();
+        }
+        if (cachedGames == null) return "Please run 'list' first.";
+        if (gameNumber < 1 || gameNumber > cachedGames.length) return "Invalid game number.";
+        if (!color.equals("WHITE") && !color.equals("BLACK")) return "Color must be WHITE or BLACK.";
+
+        int gameID = cachedGames[gameNumber - 1].gameID();
+        server.joinGame(gameID, color, authToken);
+        BoardDrawer.draw(color.equals("BLACK")); // not created yet
+        return "";
+    }
 }
