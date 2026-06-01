@@ -100,4 +100,16 @@ public class ChessClient {
         username = null;
         return "Logged out.";
     }
+
+    private String createGame(String[] params) throws Exception {
+        String gameName;
+        if (params.length >= 1) {
+            gameName = String.join(" ", params);
+        } else {
+            System.out.print("Game name: ");
+            gameName = scanner.nextLine().trim();
+        }
+        server.createGame(gameName, authToken);
+        return "Game '" + gameName + "' created.";
+    }
 }
