@@ -60,4 +60,16 @@ public class BoardDrawer {
         System.out.print(BORDER + BORDER_TEXT + " " + row + " " + RESET);
         System.out.println();
     }
+
+    private static String getPiece(int row, int col) {
+        if (row == 1) return BACK_ROW[col];
+        if (row == 2) return "P";
+        if (row == 7) return "P";
+        if (row == 8) return BACK_ROW[col];
+        return EMPTY;
+    }
+
+    private static boolean isPieceWhite(int row) {
+        return row == 2 || row == 1;
+    }
 }
