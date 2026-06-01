@@ -10,7 +10,9 @@ public class BoardDrawer {
     private static final String BORDER = "\u001B[100m";            // dark gray background
     private static final String BORDER_TEXT = "\u001B[97m";        // white text
 
-    private static final String[] BACK_ROW = {"R", "N", "B", "Q", "K", "B", "N", "R"};
+    private static final String[] BACK_ROW = {
+            "R", "N", "B", "Q", "K", "B", "N", "R"
+    };
     private static final String EMPTY = " ";
 
     public static void draw(boolean blackPerspective) {
@@ -37,9 +39,13 @@ public class BoardDrawer {
     private static void printColLabels(String[] cols, boolean reversed) {
         System.out.print(BORDER + BORDER_TEXT + "   ");
         if (reversed) {
-            for (int i = 7; i >= 0; i--) System.out.print(" " + cols[i] + " ");
+            for (int i = 7; i >= 0; i--) {
+                System.out.print(" " + cols[i] + " ");
+            }
         } else {
-            for (String col : cols) System.out.print(" " + col + " ");
+            for (String col : cols) {
+                System.out.print(" " + col + " ");
+            }
         }
         System.out.println("   " + RESET);
     }
@@ -62,10 +68,18 @@ public class BoardDrawer {
     }
 
     private static String getPiece(int row, int col) {
-        if (row == 1) return BACK_ROW[col];
-        if (row == 2) return "P";
-        if (row == 7) return "P";
-        if (row == 8) return BACK_ROW[col];
+        if (row == 1) {
+            return BACK_ROW[col];
+        }
+        if (row == 2) {
+            return "P";
+        }
+        if (row == 7) {
+            return "P";
+        }
+        if (row == 8) {
+            return BACK_ROW[col];
+        }
         return EMPTY;
     }
 

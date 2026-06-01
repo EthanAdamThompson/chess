@@ -72,7 +72,9 @@ public class ServerFacade {
                     ? (String) parsed.get("message") : msg;
             throw new Exception(serverMsg);
         }
-        if (responseClass == null) return null;
+        if (responseClass == null) {
+            return null;
+        }
         try (var inputStream = http.getInputStream()) {
             return gson.fromJson(new String(inputStream.readAllBytes()), responseClass);
         }
