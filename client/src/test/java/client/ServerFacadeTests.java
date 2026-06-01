@@ -2,7 +2,7 @@ package client;
 
 import org.junit.jupiter.api.*;
 import server.Server;
-
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ServerFacadeTests {
 

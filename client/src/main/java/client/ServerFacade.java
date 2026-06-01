@@ -77,4 +77,7 @@ public class ServerFacade {
             return gson.fromJson(new String(inputStream.readAllBytes()), responseClass);
         }
     }
+    public void clear() throws Exception {
+        makeRequest("DELETE", "/db", null, null, null);
+    }
 }
