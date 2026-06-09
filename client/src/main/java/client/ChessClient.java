@@ -280,10 +280,14 @@ public class ChessClient {
     }
 
     private chess.ChessPosition parseSquare(String square) {
-        if (square.length() != 2) return null;
+        if (square.length() != 2) {
+            return null;
+        }
         int col = square.charAt(0) - 'a' + 1;
         int row = square.charAt(1) - '0';
-        if (col < 1 || col > 8 || row < 1 || row > 8) return null;
+        if (col < 1 || col > 8 || row < 1 || row > 8){
+            return null;
+        }
         return new chess.ChessPosition(row, col);
     }
 

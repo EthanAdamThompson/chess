@@ -96,7 +96,9 @@ public class BoardDrawer {
     }
 
     private static String pieceStr(ChessPiece piece) {
-        if (piece == null) return " ";
+        if (piece == null) {
+            return " ";
+        }
         return switch (piece.getPieceType()) {
             case KING   -> "K";
             case QUEEN  -> "Q";
