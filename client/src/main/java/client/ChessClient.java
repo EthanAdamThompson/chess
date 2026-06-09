@@ -245,6 +245,26 @@ public class ChessClient {
             return "Invalid square. Use format like e2.";
         }
 
+        chess.ChessPiece.PieceType promotion = null;
+        if (currentGame != null) {
+            chess.ChessPiece piece = currentGame.getBoard().getPiece(fromPos);
+            boolean isPromotion = piece != null
+                    && piece.getPieceType() == chess.ChessPiece.PieceType.PAWN
+                    && ((piece.getTeamColor() == chess.ChessGame.TeamColor.WHITE && toPos.getRow() == 8)
+                    || (piece.getTeamColor() == chess.ChessGame.TeamColor.BLACK && toPos.getRow() == 1));
+
+            if (isPromotion) {
+                System.out.print("Promote to (Q/R/B/N): ");
+                String choice = scanner.nextLine().trim().toUpperCase();
+                promotion = switch (choice) {
+                    case "R" -> chess.ChessPiece.PieceType.ROOK;
+                    case "B" -> chess.ChessPiece.PieceType.BISHOP;
+                    case "N" -> chess.ChessPiece.PieceType.KNIGHT;
+                    default  -> chess.ChessPiece.PieceType.QUEEN;
+                };
+            }
+        }
+
         var move = new chess.ChessMove(fromPos, toPos, null);
         var command = new websocket.commands.MakeMoveCommand(authToken, gameID, move);
         try {
