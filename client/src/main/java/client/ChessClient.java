@@ -201,6 +201,27 @@ public class ChessClient {
                 websocket.commands.UserGameCommand.CommandType.LEAVE, authToken, gameID));
     }
 
+    private String makeMove(String[] params, int gameID, String color) {
+        // TODO
+        return "Move not yet implemented.";
+    }
+
+    private String resign(int gameID) throws Exception {
+        System.out.print("Are you sure you want to resign? (yes/no): ");
+        String confirm = scanner.nextLine().trim().toLowerCase();
+        if (confirm.equals("yes")) {
+            webFacade.sendCommand(new websocket.commands.UserGameCommand(
+                    websocket.commands.UserGameCommand.CommandType.RESIGN, authToken, gameID));
+            return "You resigned.";
+        }
+        return "Resign cancelled.";
+    }
+
+    private String highlight(String[] params, String color) {
+        // TODO
+        return "Highlight not yet implemented.";
+    }
+
     private String playGame(String[] params) throws Exception {
         int gameNumber;
         String color;
