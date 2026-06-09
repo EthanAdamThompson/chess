@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.LoadGameMessage;
 import model.AuthData;
@@ -92,8 +94,9 @@ public class WebHandler {
             }
         }
     }
-    private void handleMakeMove(WsContext ctx, UserGameCommand command) {
+    private void handleMakeMove(WsContext ctx, String rawMessage) {
         try {
+            MakeMoveCommand command = gson.fromJson(rawMessage, MakeMoveCommand.class);
             AuthData auth = dataAccess.getAuth(command.getAuthToken());
             if (auth == null) {
                 sendError(ctx, "Error: invalid auth token");
@@ -127,9 +130,7 @@ public class WebHandler {
                 return;
             }
             // Get the move from the command
-            websocket.commands.MakeMoveCommand moveCommand = gson.fromJson(
-                    gson.toJson(command), websocket.commands.MakeMoveCommand.class);
-            chess.ChessMove move = moveCommand.getMove();
+            chess.ChessMove move = command.getMove();
             // Attempt the move
             try {
                 game.makeMove(move);
@@ -251,10 +252,11 @@ public class WebHandler {
         }
     }
     public void onMessage(WsMessageContext ctx) {
-        UserGameCommand command = gson.fromJson(ctx.message(), UserGameCommand.class);
+        String rawMessage = ctx.message();
+        UserGameCommand command = gson.fromJson(rawMessage, UserGameCommand.class);
         switch (command.getCommandType()) {
             case CONNECT -> handleConnect(ctx, command);
-            case MAKE_MOVE -> handleMakeMove(ctx, command);
+            case MAKE_MOVE -> handleMakeMove(ctx, rawMessage);
             case LEAVE -> handleLeave(ctx, command);
             case RESIGN -> handleResign(ctx, command);
         }
