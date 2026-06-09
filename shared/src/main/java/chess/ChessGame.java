@@ -14,16 +14,19 @@ import java.util.Objects;
 public class ChessGame {
     private TeamColor teamTurn;
     private ChessBoard board;
-    private boolean whiteKingMoved = false;
-    private boolean blackKingMoved = false;
-    private boolean whiteLeftRookMoved = false;
-    private boolean whiteRightRookMoved = false;
-    private boolean blackLeftRookMoved = false;
-    private boolean blackRightRookMoved = false;
+    private boolean gameOver = false;
     public ChessGame() {
         this.board = new ChessBoard();
         board.resetBoard();
         this.teamTurn = TeamColor.WHITE;
+    }
+
+    public boolean isOver() {
+        return gameOver;
+    }
+
+    public void setOver(boolean over) {
+        this.gameOver = over;
     }
 
     /**
@@ -101,6 +104,9 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
+        if (gameOver) {
+            throw new InvalidMoveException("Game is already over");
+        }
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
         ChessPiece piece = board.getPiece(start);
@@ -130,28 +136,9 @@ public class ChessGame {
             }
         }
         else if (piece.getPieceType() == ChessPiece.PieceType.KING){
-            if(piece.getTeamColor() == TeamColor.WHITE){
-                whiteKingMoved = true;
-            }
-            else if(piece.getTeamColor() == TeamColor.BLACK){
-                blackKingMoved = true;
-            }
             board.addPiece(end, piece);
         }
         else if (piece.getPieceType() == ChessPiece.PieceType.ROOK){
-            // For Castling
-            if(piece.getTeamColor() == TeamColor.WHITE && start.getColumn() == 1){
-                whiteLeftRookMoved = true;
-            }
-            else if(piece.getTeamColor() == TeamColor.WHITE && start.getColumn() == 8){
-                whiteRightRookMoved = true;
-            }
-            else if(piece.getTeamColor() == TeamColor.BLACK && start.getColumn() == 1){
-                blackLeftRookMoved = true;
-            }
-            else if(piece.getTeamColor() == TeamColor.BLACK && start.getColumn() == 8){
-                blackRightRookMoved = true;
-            }
             board.addPiece(end, piece);
         }
         else {
