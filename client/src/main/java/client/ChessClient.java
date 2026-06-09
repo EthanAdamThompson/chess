@@ -152,7 +152,8 @@ public class ChessClient {
         switch (message.getServerMessageType()) {
             case LOAD_GAME -> {
                 var loadMsg = (websocket.messages.LoadGameMessage) message;
-                currentGame = (chess.ChessGame) loadMsg.getGame();
+                String gameJson = new com.google.gson.Gson().toJson(loadMsg.getGame());
+                currentGame = new com.google.gson.Gson().fromJson(gameJson, chess.ChessGame.class);
                 boolean flip = "BLACK".equals(currentColor);
                 BoardDrawer.draw(currentGame, flip);
             }
