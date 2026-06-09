@@ -215,7 +215,41 @@ public class WebHandler {
             sendError(ctx, "Error: " + exception.getMessage());
         }
     }
-    private void handleResign(WsContext ctx, UserGameCommand command) {}
+    private void handleResign(WsContext ctx, UserGameCommand command) {
+        try {
+            AuthData auth = dataAccess.getAuth(command.getAuthToken());
+            if (auth == null) {
+                sendError(ctx, "Error: invalid auth token");
+                return;
+            }
+            String username = auth.username();
+            GameData gameData = dataAccess.getGame(command.getGameID());
+            if (gameData == null) {
+                sendError(ctx, "Error: game not found");
+                return;
+            }
+            // Only players can resign, not observers
+            if (!username.equals(gameData.whiteUsername()) && !username.equals(gameData.blackUsername())) {
+                sendError(ctx, "Error: observers cannot resign");
+                return;
+            }
+            chess.ChessGame game = gameData.game();
+            if (game.isOver()) {
+                sendError(ctx, "Error: game is already over");
+                return;
+            }
+            // Mark game as over and save
+            game.setOver(true);
+            dataAccess.updateGame(new GameData(gameData.gameID(), gameData.whiteUsername(),
+                    gameData.blackUsername(), gameData.gameName(), game));
+            // Notify all clients including the resigner
+            broadcastAll(command.getGameID(), gson.toJson(
+                    new NotificationMessage(username + " resigned. Game over.")));
+
+        } catch (Exception exception) {
+            sendError(ctx, "Error: " + exception.getMessage());
+        }
+    }
     public void onMessage(WsMessageContext ctx) {
         UserGameCommand command = gson.fromJson(ctx.message(), UserGameCommand.class);
         switch (command.getCommandType()) {
