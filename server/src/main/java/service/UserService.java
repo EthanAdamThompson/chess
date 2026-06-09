@@ -55,5 +55,4 @@ public class UserService {
         }
         dataAccess.deleteAuth(request.authToken);
     }
-
 }

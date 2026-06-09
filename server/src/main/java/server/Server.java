@@ -28,7 +28,7 @@ public class Server {
         var clearService = new ClearService(dataAccess);
         var userHandler = new UserHandler(userService);
         var gameHandler = new GameHandler(gameService);
-        var webHandler = new WebHandler(gameService, userService);
+        var webHandler = new WebHandler(gameService, userService, dataAccess);
 
         javalin = Javalin.create(config -> {
             config.staticFiles.add("web");
