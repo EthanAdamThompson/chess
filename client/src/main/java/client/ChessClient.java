@@ -6,12 +6,14 @@ import java.util.Scanner;
 public class ChessClient {
     private final ServerFacade server;
     private final Scanner scanner = new Scanner(System.in);
-
+    private WebFacade webFacade = null;
+    private final int port;
     private String authToken = null;
     private String username = null;
     // for number -> gameID mapping
     private ServerFacade.GameData[] cachedGames = null;
     public ChessClient(int port) {
+        this.port = port;
         this.server = new ServerFacade(port);
     }
 
@@ -139,6 +141,45 @@ public class ChessClient {
         return sb.toString().stripTrailing();
     }
 
+    private void onServerMessage(websocket.messages.ServerMessage message) {
+        System.out.println("\n[Server]: " + message.getServerMessageType());
+    }
+
+    private void gameplayLoop(int gameID, String color) {
+        System.out.println("Entered game. Type 'help' for commands.");
+        while (true) {
+            System.out.print("[GAME] >> ");
+            String line = scanner.nextLine().trim();
+            String[] tokens = line.split("\\s+");
+            String cmd = tokens.length > 0 ? tokens[0].toLowerCase() : "";
+            String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
+
+            try {
+                String result = handleGameplay(cmd, params, gameID, color);
+                if (result == null) {
+                    break; // leave signal
+                }
+                if (!result.isEmpty()) {
+                    System.out.println(result);
+                }
+            } catch (Exception e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+    }
+
+    private String handleGameplay(String cmd, String[] params, int gameID, String color) throws Exception {
+        return switch (cmd) {
+            case "help" -> gameplayHelp();
+            case "redraw" -> redraw(color);
+            case "leave" -> { leave(gameID); yield null; }
+            case "move" -> makeMove(params, gameID, color);
+            case "resign" -> resign(gameID);
+            case "highlight" -> highlight(params, color);
+            default -> "Unknown command. Type 'help' for options.";
+        };
+    }
+
     private String playGame(String[] params) throws Exception {
         int gameNumber;
         String color;
@@ -171,7 +212,9 @@ public class ChessClient {
 
         int gameID = cachedGames[gameNumber - 1].gameID();
         server.joinGame(gameID, color, authToken);
-        BoardDrawer.draw(color.equals("BLACK")); // not created yet
+        webFacade = new WebFacade(port, this::onServerMessage);
+        webFacade.connect(authToken, gameID);
+        gameplayLoop(gameID, color);
         return "";
     }
 
@@ -190,7 +233,10 @@ public class ChessClient {
             return "Invalid game number.";
         }
 
-        BoardDrawer.draw(false); // observers see white's perspective
+        int gameID = cachedGames[gameNumber - 1].gameID();
+        webFacade = new WebFacade(port, this::onServerMessage);
+        webFacade.connect(authToken, gameID);
+        gameplayLoop(gameID, "WHITE");
         return "";
     }
 
