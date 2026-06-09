@@ -202,8 +202,39 @@ public class ChessClient {
     }
 
     private String makeMove(String[] params, int gameID, String color) {
-        // TODO
-        return "Move not yet implemented.";
+        String from, to;
+        if (params.length >= 2) {
+            from = params[0].toLowerCase();
+            to = params[1].toLowerCase();
+        } else {
+            System.out.print("From square (e.g. e2): ");
+            from = scanner.nextLine().trim().toLowerCase();
+            System.out.print("To square (e.g. e4): ");
+            to = scanner.nextLine().trim().toLowerCase();
+        }
+
+        chess.ChessPosition fromPos = parseSquare(from);
+        chess.ChessPosition toPos = parseSquare(to);
+        if (fromPos == null || toPos == null) {
+            return "Invalid square. Use format like e2.";
+        }
+
+        var move = new chess.ChessMove(fromPos, toPos, null);
+        var command = new websocket.commands.MakeMoveCommand(authToken, gameID, move);
+        try {
+            webFacade.sendCommand(command);
+        } catch (Exception exception) {
+            return "Error sending move: " + exception.getMessage();
+        }
+        return "";
+    }
+
+    private chess.ChessPosition parseSquare(String square) {
+        if (square.length() != 2) return null;
+        int col = square.charAt(0) - 'a' + 1;
+        int row = square.charAt(1) - '0';
+        if (col < 1 || col > 8 || row < 1 || row > 8) return null;
+        return new chess.ChessPosition(row, col);
     }
 
     private String resign(int gameID) throws Exception {
