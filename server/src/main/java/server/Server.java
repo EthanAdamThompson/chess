@@ -10,6 +10,7 @@ import service.ClearService;
 import service.GameService;
 import service.UserService;
 
+
 public class Server {
 
     private final Javalin javalin;
@@ -27,6 +28,7 @@ public class Server {
         var clearService = new ClearService(dataAccess);
         var userHandler = new UserHandler(userService);
         var gameHandler = new GameHandler(gameService);
+        var webHandler = new WebHandler();
 
         javalin = Javalin.create(config -> {
             config.staticFiles.add("web");
@@ -43,6 +45,12 @@ public class Server {
                     return gson.fromJson(json, targetType);
                 }
             });
+        });
+        javalin.ws("/ws", ws -> {
+            ws.onConnect(webHandler::onConnect);
+            ws.onMessage(webHandler::onMessage);
+            ws.onClose(webHandler::onClose);
+            ws.onError(webHandler::onError);
         });
 
         // Clear the database
