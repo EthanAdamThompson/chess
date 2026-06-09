@@ -177,7 +177,44 @@ public class WebHandler {
             sendError(ctx, "Error: " + exception.getMessage());
         }
     }
-    private void handleLeave(WsContext ctx, UserGameCommand command) {}
+    private void handleLeave(WsContext ctx, UserGameCommand command) {
+        try {
+            AuthData auth = dataAccess.getAuth(command.getAuthToken());
+            if (auth == null) {
+                sendError(ctx, "Error: invalid auth token");
+                return;
+            }
+            String username = auth.username();
+
+            GameData gameData = dataAccess.getGame(command.getGameID());
+            if (gameData == null) {
+                sendError(ctx, "Error: game not found");
+                return;
+            }
+
+            // Remove player from game if they are a player (not observer)
+            if (username.equals(gameData.whiteUsername())) {
+                dataAccess.updateGame(new GameData(gameData.gameID(), null,
+                        gameData.blackUsername(), gameData.gameName(), gameData.game()));
+            } else if (username.equals(gameData.blackUsername())) {
+                dataAccess.updateGame(new GameData(gameData.gameID(), gameData.whiteUsername(),
+                        null, gameData.gameName(), gameData.game()));
+            }
+
+            // Remove session
+            var sessions = gameSessions.get(command.getGameID());
+            if (sessions != null) {
+                sessions.remove(ctx);
+            }
+
+            // Notify others
+            broadcast(command.getGameID(), ctx, gson.toJson(
+                    new NotificationMessage(username + " left the game")));
+
+        } catch (Exception exception) {
+            sendError(ctx, "Error: " + exception.getMessage());
+        }
+    }
     private void handleResign(WsContext ctx, UserGameCommand command) {}
     public void onMessage(WsMessageContext ctx) {
         UserGameCommand command = gson.fromJson(ctx.message(), UserGameCommand.class);
