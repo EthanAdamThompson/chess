@@ -1,6 +1,10 @@
 package client;
 
+import chess.ChessMove;
+import chess.ChessPosition;
+
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Scanner;
 
 public class ChessClient {
@@ -10,6 +14,8 @@ public class ChessClient {
     private final int port;
     private String authToken = null;
     private String username = null;
+    private chess.ChessGame currentGame = null;
+    private String currentColor = "WHITE";
     // for number -> gameID mapping
     private ServerFacade.GameData[] cachedGames = null;
     public ChessClient(int port) {
@@ -142,7 +148,24 @@ public class ChessClient {
     }
 
     private void onServerMessage(websocket.messages.ServerMessage message) {
-        System.out.println("\n[Server]: " + message.getServerMessageType());
+        System.out.println();
+        switch (message.getServerMessageType()) {
+            case LOAD_GAME -> {
+                var loadMsg = (websocket.messages.LoadGameMessage) message;
+                currentGame = (chess.ChessGame) loadMsg.getGame();
+                boolean flip = "BLACK".equals(currentColor);
+                BoardDrawer.draw(currentGame, flip);
+            }
+            case ERROR -> {
+                var errMsg = (websocket.messages.ErrorMessage) message;
+                System.out.println("[ERROR]: " + errMsg.getErrorMessage());
+            }
+            case NOTIFICATION -> {
+                var notifMsg = (websocket.messages.NotificationMessage) message;
+                System.out.println("[NOTICE]: " + notifMsg.getMessage());
+            }
+        }
+        System.out.print("[GAME] >> ");
     }
 
     private void gameplayLoop(int gameID, String color) {
@@ -192,7 +215,10 @@ public class ChessClient {
     }
 
     private String redraw(String color) {
-        BoardDrawer.draw(color.equals("BLACK"));
+        if (currentGame == null) {
+            return "No game loaded yet.";
+        }
+        BoardDrawer.draw(currentGame, "BLACK".equals(color));
         return "";
     }
 
@@ -249,8 +275,30 @@ public class ChessClient {
     }
 
     private String highlight(String[] params, String color) {
-        // TODO
-        return "Highlight not yet implemented.";
+        if (currentGame == null) {
+            return "No game loaded yet.";
+        }
+        String square;
+        if (params.length >= 1) {
+            square = params[0].toLowerCase();
+        } else {
+            System.out.print("Square (e.g. e2): ");
+            square = scanner.nextLine().trim().toLowerCase();
+        }
+
+        ChessPosition pos = parseSquare(square);
+        if (pos == null) {
+            return "Invalid square. Use format like e2.";
+        }
+
+        Collection<ChessMove> moves = currentGame.validMoves(pos);
+        if (moves == null || moves.isEmpty()) {
+            return "No legal moves for that piece.";
+        }
+
+        boolean flip = "BLACK".equals(color);
+        BoardDrawer.draw(currentGame, flip, pos, moves);
+        return "";
     }
 
     private String playGame(String[] params) throws Exception {
@@ -287,6 +335,7 @@ public class ChessClient {
         server.joinGame(gameID, color, authToken);
         webFacade = new WebFacade(port, this::onServerMessage);
         webFacade.connect(authToken, gameID);
+        this.currentColor = color;
         gameplayLoop(gameID, color);
         return "";
     }
@@ -309,6 +358,7 @@ public class ChessClient {
         int gameID = cachedGames[gameNumber - 1].gameID();
         webFacade = new WebFacade(port, this::onServerMessage);
         webFacade.connect(authToken, gameID);
+        this.currentColor = "WHITE";
         gameplayLoop(gameID, "WHITE");
         return "";
     }
