@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import websocket.commands.UserGameCommand;
 
 public class WebHandler {
     private final GameService gameService;
@@ -23,7 +24,18 @@ public class WebHandler {
     public void onConnect(WsContext ctx) {
     }
 
-    public void onMessage(WsContext ctx) {
+    private void handleConnect(WsContext ctx, UserGameCommand command) {}
+    private void handleMakeMove(WsContext ctx, UserGameCommand command) {}
+    private void handleLeave(WsContext ctx, UserGameCommand command) {}
+    private void handleResign(WsContext ctx, UserGameCommand command) {}
+    public void onMessage(WsMessageContext ctx) {
+        UserGameCommand command = gson.fromJson(ctx.message(), UserGameCommand.class);
+        switch (command.getCommandType()) {
+            case CONNECT -> handleConnect(ctx, command);
+            case MAKE_MOVE -> handleMakeMove(ctx, command);
+            case LEAVE -> handleLeave(ctx, command);
+            case RESIGN -> handleResign(ctx, command);
+        }
     }
 
     public void onClose(WsContext ctx) {
