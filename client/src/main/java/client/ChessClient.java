@@ -180,6 +180,27 @@ public class ChessClient {
         };
     }
 
+    private String gameplayHelp() {
+        return """
+            Available commands:
+              help                        - Show help
+              redraw                      - Redraw the chess board
+              leave                       - Leave the game
+              move <from> <to>            - Make a move (e.g. move e2 e4)
+              resign                      - Forfeit the game
+              highlight <square>          - Highlight legal moves for a piece""";
+    }
+
+    private String redraw(String color) {
+        BoardDrawer.draw(color.equals("BLACK"));
+        return "";
+    }
+
+    private void leave(int gameID) throws Exception {
+        webFacade.sendCommand(new websocket.commands.UserGameCommand(
+                websocket.commands.UserGameCommand.CommandType.LEAVE, authToken, gameID));
+    }
+
     private String playGame(String[] params) throws Exception {
         int gameNumber;
         String color;
