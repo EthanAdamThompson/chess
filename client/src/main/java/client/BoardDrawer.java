@@ -69,7 +69,7 @@ public class BoardDrawer {
         System.out.print(BORDER + BORDER_TEXT + " " + row + " " + RESET);
 
         for (int col = 0; col < 8; col++) {
-            int actualCol = blackPerspective ? col : 7 - col;
+            int actualCol = blackPerspective ? 7 - col : col;
             // ChessPosition is 1-indexed
             ChessPosition pos = new ChessPosition(row, actualCol + 1);
             boolean lightSquare = (row + actualCol) % 2 != 0;
