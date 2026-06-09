@@ -263,6 +263,9 @@ public class WebHandler {
     }
 
     public void onClose(WsContext ctx) {
+        for (var entry : gameSessions.entrySet()) {
+            entry.getValue().remove(ctx);
+        }
     }
 
     public void onError(WsContext ctx) {
