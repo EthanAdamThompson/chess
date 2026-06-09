@@ -14,6 +14,8 @@ public class BoardDrawer {
     private static final String BLACK_PIECE = "\u001B[1;34m";      // blue
     private static final String BORDER = "\u001B[100m";            // dark gray background
     private static final String BORDER_TEXT = "\u001B[97m";        // white text
+    private static final String HIGHLIGHT_SELECTED = "\u001B[43m";  // yellow
+    private static final String HIGHLIGHT_LEGAL    = "\u001B[42m";  // green
 
     /** Draw with no highlights */
     public static void draw(ChessGame game, boolean blackPerspective) {
