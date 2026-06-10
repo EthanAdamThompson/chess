@@ -61,7 +61,6 @@ public class WebHandler {
             // Send LOAD_GAME to root client
             var loadGameMessage = new LoadGameMessage(game);
             ctx.send(gson.toJson(loadGameMessage));
-
             String role;
             if (username.equals(game.whiteUsername())) {
                 role = "as WHITE";
