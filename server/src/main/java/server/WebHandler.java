@@ -32,8 +32,8 @@ public class WebHandler {
     }
 
     public void onConnect(WsContext ctx) {
+        ctx.enableAutomaticPings();
     }
-
     private void handleConnect(WsContext ctx, UserGameCommand command) {
         try {
             AuthData auth = dataAccess.getAuth(command.getAuthToken());
@@ -62,8 +62,16 @@ public class WebHandler {
             var loadGameMessage = new LoadGameMessage(game);
             ctx.send(gson.toJson(loadGameMessage));
 
+            String role;
+            if (username.equals(game.whiteUsername())) {
+                role = "as WHITE";
+            } else if (username.equals(game.blackUsername())) {
+                role = "as BLACK";
+            } else {
+                role = "as an observer";
+            }
             // Send NOTIFICATION to all other clients
-            String notification = username + " joined the game";
+            String notification = username + " joined the game " + role;
             var notificationMessage = new NotificationMessage(notification);
             broadcast(command.getGameID(), ctx, gson.toJson(notificationMessage));
 
